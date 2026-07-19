@@ -9,19 +9,21 @@ import { Countdown } from '@/components/wedding/countdown'
 import { Schedule } from '@/components/wedding/schedule'
 import { Rules } from '@/components/wedding/rules'
 import { Rsvp } from '@/components/wedding/rsvp'
+import { MapSection } from '@/components/wedding/map-section'
 import { BottomNav } from '@/components/wedding/bottom-nav'
 import { GoldParticles } from '@/components/wedding/gold-particles'
+import { useMusic } from '@/lib/music-context'
 
 export default function Page() {
   const [splashOpen, setSplashOpen] = useState(true)
-  const [playing, setPlaying] = useState(false)
+  const { playMusic } = useMusic()
 
-  const audioRef = useRef<HTMLAudioElement | null>(null)
   const heroRef = useRef<HTMLDivElement | null>(null)
   const locationRef = useRef<HTMLElement | null>(null)
   const countdownRef = useRef<HTMLElement | null>(null)
   const rulesRef = useRef<HTMLDivElement | null>(null)
   const rsvpRef = useRef<HTMLElement | null>(null)
+  const mapRef = useRef<HTMLElement | null>(null)
 
   // Holds every pending timer for the auto-scroll presentation so we can cancel
   // the whole chain the instant the guest takes control.
@@ -35,31 +37,11 @@ export default function Page() {
 
   useEffect(() => stopAutoScroll, [])
 
-  function playMusic() {
-    const audio = audioRef.current
-    if (!audio) return
-    audio
-      .play()
-      .then(() => setPlaying(true))
-      .catch(() => setPlaying(false))
-  }
-
-  function toggleMusic() {
-    const audio = audioRef.current
-    if (!audio) return
-    if (playing) {
-      audio.pause()
-      setPlaying(false)
-    } else {
-      playMusic()
-    }
-  }
-
   // Smoothly glide to a section, measuring its live position via its ref.
   function scrollTo(ref: React.RefObject<HTMLElement | null>) {
     const target = ref.current
     if (!target) return
-    const top = target.getBoundingClientRect().top + window.scrollY - 16
+    const top = target.getBoundingClientRect().top + window.scrollY - 80 // offset for top navbar
     window.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' })
   }
 
@@ -74,12 +56,13 @@ export default function Page() {
       ref: React.RefObject<HTMLElement | null>
       pause: number
     }[] = [
-      { ref: heroRef, pause: 3500 }, // Hero / details
-      { ref: locationRef, pause: 3500 }, // Special invitation & venue
-      { ref: countdownRef, pause: 3500 }, // Countdown & event timeline
-      { ref: rulesRef, pause: 3500 }, // Event rules
-      { ref: rsvpRef, pause: 0 }, // RSVP / congratulations (final, bottom)
-    ]
+        { ref: heroRef, pause: 3500 }, // Hero / details
+        { ref: locationRef, pause: 3500 }, // Special invitation & venue
+        { ref: countdownRef, pause: 3500 }, // Countdown & event timeline
+        { ref: rulesRef, pause: 3500 }, // Event rules
+        { ref: mapRef, pause: 3500 }, // Map coordinates venue
+        { ref: rsvpRef, pause: 0 }, // RSVP / congratulations (final, bottom)
+      ]
 
     // Curtain finishes splitting at ~1.9s; allow ~1s of easing between stops.
     const SCROLL_EASE = 1000
@@ -129,12 +112,10 @@ export default function Page() {
         <div className="absolute inset-0 bg-background/70" />
       </div>
 
-      <audio ref={audioRef} loop preload="auto" src="/audio/wedding.mp3" />
-
       <main className="relative mx-auto min-h-screen max-w-md overflow-hidden bg-background shadow-[0_0_80px_rgba(0,0,0,0.6)] lg:max-w-6xl">
         <GoldParticles count={16} />
 
-        <div className="relative pb-28">
+        <div className="relative pb-28 pt-16 md:pt-24">
           <div ref={heroRef}>
             <Hero />
           </div>
@@ -153,6 +134,9 @@ export default function Page() {
             </div>
           </div>
 
+          {/* Venue Map Integration */}
+          <MapSection ref={mapRef} />
+
           <Rsvp ref={rsvpRef} />
 
           <footer className="px-6 py-10 text-center">
@@ -165,18 +149,10 @@ export default function Page() {
         </div>
       </main>
 
-      {!splashOpen && (
-        <BottomNav
-          playing={playing}
-          onToggleMusic={toggleMusic}
-          onLocation={() => scrollTo(locationRef)}
-          onSaveDate={() => scrollTo(countdownRef)}
-          onCongratulate={() => scrollTo(rsvpRef)}
-          onContact={() => scrollTo(rsvpRef)}
-        />
-      )}
+      {!splashOpen && <BottomNav />}
 
       <SplashScreen open={splashOpen} onOpen={handleOpen} />
     </>
   )
 }
+

@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Playfair_Display, Jost, Amiri } from 'next/font/google'
+import { MusicProvider } from '@/lib/music-context'
 import './globals.css'
 
 const playfair = Playfair_Display({
@@ -46,9 +47,12 @@ export default function RootLayout({
       className={`${playfair.variable} ${jost.variable} ${amiri.variable} bg-background`}
     >
       <body className="font-sans antialiased">
-        {children}
+        <MusicProvider>
+          {children}
+        </MusicProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
   )
 }
+
