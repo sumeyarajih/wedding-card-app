@@ -1,0 +1,103 @@
+@import 'tailwindcss';
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-border: var(--border);
+
+  --font-sans: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
+  --font-arabic: var(--font-amiri), 'Amiri', serif;
+
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+}
+
+:root {
+  color-scheme: dark;
+  --background: oklch(0.17 0.005 60);
+  --foreground: oklch(0.95 0.01 85);
+  --card: oklch(0.22 0.006 60);
+  --card-foreground: oklch(0.95 0.01 85);
+  --muted: oklch(0.3 0.006 60);
+  --muted-foreground: oklch(0.72 0.015 80);
+  --gold: oklch(0.78 0.13 85);
+  --gold-soft: oklch(0.68 0.1 82);
+  --border: oklch(0.78 0.13 85 / 22%);
+}
+
+* {
+  border-color: var(--border);
+}
+
+html,
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Slow-moving gold particle / shimmer helpers */
+@keyframes float-particle {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-120px) translateX(20px);
+    opacity: 0;
+  }
+}
+
+.animate-float-particle {
+  animation: float-particle linear infinite;
+}
+
+@keyframes pulse-ring {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 0 oklch(0.78 0.13 85 / 45%),
+      0 0 40px oklch(0.78 0.13 85 / 30%);
+  }
+  50% {
+    box-shadow:
+      0 0 0 18px oklch(0.78 0.13 85 / 0%),
+      0 0 60px oklch(0.78 0.13 85 / 45%);
+  }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2.6s ease-in-out infinite;
+}
+
+.gold-gradient-text {
+  background: linear-gradient(
+    135deg,
+    oklch(0.88 0.09 90),
+    oklch(0.72 0.14 82),
+    oklch(0.9 0.08 92)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
