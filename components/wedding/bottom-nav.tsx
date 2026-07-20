@@ -17,7 +17,12 @@ import {
 import { UploadModal } from './upload-modal'
 import { ContactModal } from './contact-modal'
 
-export function BottomNav() {
+interface BottomNavProps {
+  code?: string
+  tier?: 'basic' | 'premium' | 'royal'
+}
+
+export function BottomNav({ code, tier }: BottomNavProps) {
   const pathname = usePathname()
   const { playing, toggleMusic } = useMusic()
   const [uploadOpen, setUploadOpen] = useState(false)
@@ -170,7 +175,7 @@ export function BottomNav() {
       </header>
 
       {/* Modals for Camera Upload and Call Support */}
-      <UploadModal isOpen={uploadOpen} onClose={() => setUploadOpen(false)} onUploadSuccess={handleUploadSuccess} />
+      <UploadModal isOpen={uploadOpen} onClose={() => setUploadOpen(false)} onUploadSuccess={handleUploadSuccess} code={code} />
       <ContactModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />
     </>
   )
