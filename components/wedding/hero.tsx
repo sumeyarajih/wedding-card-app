@@ -3,7 +3,26 @@
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 
-export function Hero() {
+interface HeroProps {
+  hostNames?: string
+  dateStr?: string
+  timeStr?: string
+}
+
+const DEFAULT_HOST_NAMES = 'Kareem & Hana'
+
+function parseHostNames(hostNames: string): [string, string] {
+  const parts = hostNames.split('&').map((s) => s.trim())
+  if (parts.length >= 2) return [parts[0], parts.slice(1).join(' & ')]
+  return [hostNames, '']
+}
+
+export function Hero({
+  hostNames = DEFAULT_HOST_NAMES,
+  dateStr = 'Wednesday, December 30, 2026',
+  timeStr = 'at 4:49 PM',
+}: HeroProps) {
+  const [firstName, secondName] = parseHostNames(hostNames)
   return (
     <section className="relative flex min-h-[92vh] flex-col items-center justify-end overflow-hidden pb-16 text-center lg:min-h-screen lg:pb-24">
       <Image
@@ -32,22 +51,22 @@ export function Hero() {
           The Wedding Of
         </p>
         <h1 className="gold-gradient-text font-serif text-6xl leading-none font-medium text-balance sm:text-7xl lg:text-8xl">
-          Kareem
+          {firstName}
         </h1>
         <span className="my-2 font-serif text-3xl text-foreground/80 italic lg:text-4xl">
-          &amp;
+          &
         </span>
         <h1 className="gold-gradient-text font-serif text-6xl leading-none font-medium text-balance sm:text-7xl lg:text-8xl">
-          Hana
+          {secondName}
         </h1>
 
         <div className="mt-8 flex flex-col items-center gap-1">
           <div className="h-px w-16 bg-gold/50" />
           <p className="mt-4 font-sans text-sm tracking-[0.15em] text-foreground/90">
-            Wednesday, December 30, 2026
+            {dateStr}
           </p>
           <p className="font-sans text-sm tracking-[0.15em] text-foreground/70">
-            at 4:49 PM
+            {timeStr}
           </p>
           <p
             dir="rtl"
