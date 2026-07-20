@@ -4,13 +4,28 @@ import { MapPin } from 'lucide-react'
 import { forwardRef } from 'react'
 import { Reveal } from './reveal'
 
-const MAPS_URL =
-  'https://www.google.com/maps/search/?api=1&query=The+Ritz-Carlton+Riyadh'
+interface InvitationCardProps {
+  hostNames?: string
+  venueName?: string
+  venueAddress?: string
+  mapQuery?: string
+}
 
-export const InvitationCard = forwardRef<HTMLElement>(function InvitationCard(
-  _props,
+const DEFAULT_HOST = 'Kareem & Hana'
+const DEFAULT_VENUE = 'The Ritz-Carlton, Riyadh'
+const DEFAULT_ADDRESS = 'Al Hada District, Riyadh, Saudi Arabia'
+const DEFAULT_MAP_QUERY = 'The+Ritz-Carlton+Riyadh'
+
+export const InvitationCard = forwardRef<HTMLElement, InvitationCardProps>(function InvitationCard(
+  {
+    hostNames = DEFAULT_HOST,
+    venueName = DEFAULT_VENUE,
+    venueAddress = DEFAULT_ADDRESS,
+    mapQuery = DEFAULT_MAP_QUERY,
+  },
   ref,
 ) {
+  const MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`
   return (
     <section ref={ref} className="scroll-mt-6 px-5 py-8">
       <Reveal>
@@ -39,7 +54,7 @@ export const InvitationCard = forwardRef<HTMLElement>(function InvitationCard(
             <p className="mx-auto mt-6 max-w-sm font-serif text-lg leading-relaxed text-pretty text-foreground/90 italic">
               With hearts full of joy, we invite you to share in the celebration
               of love as
-              <span className="text-gold"> Kareem &amp; Hana </span>
+              <span className="text-gold"> {hostNames} </span>
               begin their journey together as one.
             </p>
 
@@ -50,10 +65,10 @@ export const InvitationCard = forwardRef<HTMLElement>(function InvitationCard(
             </div>
 
             <p className="font-serif text-xl text-foreground">
-              The Ritz-Carlton, Riyadh
+              {venueName}
             </p>
             <p className="mt-1 font-sans text-sm text-muted-foreground">
-              Al Hada District, Riyadh, Saudi Arabia
+              {venueAddress}
             </p>
 
             <a
