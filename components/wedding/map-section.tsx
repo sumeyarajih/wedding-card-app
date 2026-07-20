@@ -4,10 +4,26 @@ import React, { forwardRef } from 'react'
 import { MapPin, Navigation, Compass } from 'lucide-react'
 import { Reveal } from './reveal'
 
-export const MapSection = forwardRef<HTMLElement>(function MapSection(_props, ref) {
-    const directionsUrl = 'https://maps.google.com/maps?q=The+Ritz-Carlton+Riyadh'
-    const embedUrl =
-        'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3624.978252285514!2d46.62680457618037!3d24.693444451792618!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e2f1cd8f8dc1c7b%3A0x6b8bc22db0c0b388!2sThe%20Ritz-Carlton%2C%20Riyadh!5e0!3m2!1sen!2ssa!4v1700000000000!5m2!1sen!2ssa'
+interface MapSectionProps {
+  venueName?: string
+  venueAddress?: string
+  mapQuery?: string
+}
+
+const DEFAULT_VENUE = 'The Ritz-Carlton, Riyadh'
+const DEFAULT_ADDRESS = 'Al Hada Area, Mekkah Road, Riyadh, Saudi Arabia'
+const DEFAULT_MAP_QUERY = 'The+Ritz-Carlton+Riyadh'
+
+export const MapSection = forwardRef<HTMLElement, MapSectionProps>(function MapSection(
+  {
+    venueName = DEFAULT_VENUE,
+    venueAddress = DEFAULT_ADDRESS,
+    mapQuery = DEFAULT_MAP_QUERY,
+  },
+  ref,
+) {
+    const directionsUrl = `https://maps.google.com/maps?q=${mapQuery}`
+    const embedUrl = `https://www.google.com/maps/embed/v1/place?key=&q=${mapQuery}`
 
     return (
         <section ref={ref} className="scroll-mt-20 px-5 py-8" id="venue-map">
@@ -27,9 +43,9 @@ export const MapSection = forwardRef<HTMLElement>(function MapSection(_props, re
                         <div className="flex items-start gap-3">
                             <MapPin className="mt-1 h-5 w-5 text-gold shrink-0" />
                             <div className="font-sans text-left">
-                                <h4 className="font-serif text-lg text-foreground font-semibold">The Ritz-Carlton, Riyadh</h4>
+                                <h4 className="font-serif text-lg text-foreground font-semibold">{venueName}</h4>
                                 <p className="text-xs text-muted-foreground mt-0.5">
-                                    Al Hada Area, Mekkah Road, Riyadh, Saudi Arabia
+                                    {venueAddress}
                                 </p>
                             </div>
                         </div>
@@ -54,7 +70,7 @@ export const MapSection = forwardRef<HTMLElement>(function MapSection(_props, re
                             allowFullScreen={false}
                             loading="lazy"
                             referrerPolicy="no-referrer-when-downgrade"
-                            title="The Ritz-Carlton, Riyadh Venue Map"
+                            title={`${venueName} Venue Map`}
                             className="absolute inset-0 h-full w-full opacity-80 filter invert-[90%] hue-rotate-[180deg] contrast-[85%]"
                         />
                     </div>
