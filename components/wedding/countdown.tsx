@@ -4,20 +4,20 @@ import { CalendarHeart } from 'lucide-react'
 import { forwardRef, useEffect, useState } from 'react'
 import { Reveal } from './reveal'
 
-const TARGET = new Date('2026-12-30T16:49:00+03:00').getTime()
+interface CountdownProps {
+  targetDate?: string
+  hostNames?: string
+  venueName?: string
+  venueAddress?: string
+}
 
-const GCAL_URL =
-  'https://calendar.google.com/calendar/render?action=TEMPLATE' +
-  '&text=' +
-  encodeURIComponent('Wedding of Kareem & Hana') +
-  '&dates=20261230T134900Z/20261230T190000Z' +
-  '&details=' +
-  encodeURIComponent('Join us to celebrate the wedding of Kareem & Hana.') +
-  '&location=' +
-  encodeURIComponent('The Ritz-Carlton, Riyadh, Al Hada District, Riyadh, Saudi Arabia')
+const DEFAULT_TARGET = '2026-12-30T16:49:00+03:00'
+const DEFAULT_HOST = 'Kareem & Hana'
+const DEFAULT_VENUE = 'The Ritz-Carlton, Riyadh'
+const DEFAULT_ADDRESS = 'Al Hada District, Riyadh, Saudi Arabia'
 
-function getRemaining() {
-  const diff = Math.max(0, TARGET - Date.now())
+function getRemaining(target: number) {
+  const diff = Math.max(0, target - Date.now())
   return {
     days: Math.floor(diff / 86400000),
     hours: Math.floor((diff / 3600000) % 24),
@@ -26,38 +26,61 @@ function getRemaining() {
   }
 }
 
-function downloadIcs() {
-  const ics = [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'PRODID:-//Kareem and Hana//Wedding//EN',
-    'BEGIN:VEVENT',
-    'UID:kareem-hana-wedding@invitation',
-    'DTSTAMP:20260101T000000Z',
-    'DTSTART:20261230T134900Z',
-    'DTEND:20261230T190000Z',
-    'SUMMARY:Wedding of Kareem & Hana',
-    'DESCRIPTION:Join us to celebrate the wedding of Kareem & Hana.',
-    'LOCATION:The Ritz-Carlton\\, Riyadh\\, Saudi Arabia',
-    'END:VEVENT',
-    'END:VCALENDAR',
-  ].join('\r\n')
-
-  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = 'kareem-and-hana-wedding.ics'
-  document.body.appendChild(a)
-  a.click()
-  a.remove()
-  URL.revokeObjectURL(url)
-}
-
-export const Countdown = forwardRef<HTMLElement>(function Countdown(
-  _props,
+export const Countdown = forwardRef<HTMLElement, CountdownProps>(function Countdown(
+  {
+    targetDate = DEFAULT_TARGET,
+    hostNames = DEFAULT_HOST,
+    venueName = DEFAULT_VENUE,
+    venueAddress = DEFAULT_ADDRESS,
+  },
   ref,
 ) {
+  const targetMs = new Date(targetDate).getTime()
+
+  const GCAL_URL =
+    'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+    '&text=' +
+    encodeURIComponent(`Wedding of ${hostNames}`) +
+    '&dates=' +
+    new Date(targetDate).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z/' +
+    new Date(new Date(targetDate).getTime() + 4 * 3600000).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z' +
+    '&details=' +
+    encodeURIComponent(`Join us to celebrate the wedding of ${hostNames}.`) +
+    '&location=' +
+    encodeURIComponent(`${venueName}, ${venueAddress}`)
+
+  function downloadIcs() {
+    const startDate = new Date(targetDate)
+    const endDate = new Date(startDate.getTime() + 4 * 3600000)
+    const fmt = (d: Date) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
+
+    const ics = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//' + hostNames.replace(/&/g, 'and') + '//Event//EN',
+      'BEGIN:VEVENT',
+      'UID:' + hostNames.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase() + '@invitation',
+      'DTSTAMP:' + fmt(new Date()),
+      'DTSTART:' + fmt(startDate),
+      'DTEND:' + fmt(endDate),
+      'SUMMARY:' + hostNames,
+      'DESCRIPTION:Join us to celebrate ' + hostNames + '.',
+      'LOCATION:' + venueName.replace(/,/g, '\\,') + '\\, ' + venueAddress.replace(/,/g, '\\,'),
+      'END:VEVENT',
+      'END:VCALENDAR',
+    ].join('\r\n')
+
+    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = hostNames.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase() + '-event.ics'
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    URL.revokeObjectURL(url)
+  }
+
   // Start at zeros so SSR and first client render match, then tick on the client.
   const [time, setTime] = useState({
     days: 0,
@@ -67,10 +90,10 @@ export const Countdown = forwardRef<HTMLElement>(function Countdown(
   })
 
   useEffect(() => {
-    setTime(getRemaining())
-    const id = setInterval(() => setTime(getRemaining()), 1000)
+    setTime(getRemaining(targetMs))
+    const id = setInterval(() => setTime(getRemaining(targetMs)), 1000)
     return () => clearInterval(id)
-  }, [])
+  }, [targetMs])
 
   const units: [string, number][] = [
     ['Days', time.days],
