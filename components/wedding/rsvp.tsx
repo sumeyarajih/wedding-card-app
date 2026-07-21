@@ -35,7 +35,14 @@ const SEED: Wish[] = [
   },
 ]
 
-export const Rsvp = forwardRef<HTMLElement>(function Rsvp(_props, ref) {
+interface RsvpProps {
+  code?: string
+}
+
+export const Rsvp = forwardRef<HTMLElement, RsvpProps>(function Rsvp(
+  { code },
+  ref,
+) {
   const [wishes, setWishes] = useState<Wish[]>(SEED)
   const [confirmed, setConfirmed] = useState(105)
   const [status, setStatus] = useState<'attending' | 'apologizing'>('attending')
@@ -44,10 +51,11 @@ export const Rsvp = forwardRef<HTMLElement>(function Rsvp(_props, ref) {
   const [message, setMessage] = useState('')
   const [submitted, setSubmitted] = useState(false)
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!name.trim() || !message.trim()) return
 
+    // Optimistic UI update
     setWishes((prev) => [
       { id: Date.now(), name: name.trim(), message: message.trim(), status },
       ...prev,
@@ -55,6 +63,24 @@ export const Rsvp = forwardRef<HTMLElement>(function Rsvp(_props, ref) {
     if (status === 'attending') {
       setConfirmed((c) => c + guests)
     }
+
+    // POST to API if we have a code
+    if (code) {
+      try {
+        await fetch(`/api/invite/${code}/rsvp`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            status,
+            guests,
+            message: message.trim(),
+          }),
+        })
+      } catch (err) {
+        console.error('RSVP API error:', err)
+      }
+    }
+
     setName('')
     setMessage('')
     setGuests(1)
