@@ -7,11 +7,13 @@ interface UploadModalProps {
     isOpen: boolean
     onClose: () => void
     onUploadSuccess?: (photoUrl: string, caption: string, sender: string) => void
+    code?: string
 }
 
-export function UploadModal({ isOpen, onClose, onUploadSuccess }: UploadModalProps) {
+export function UploadModal({ isOpen, onClose, onUploadSuccess, code }: UploadModalProps) {
     const [step, setStep] = useState<'select' | 'camera' | 'preview' | 'uploading'>('select')
     const [selectedImage, setSelectedImage] = useState<string | null>(null)
+    const [selectedFile, setSelectedFile] = useState<File | null>(null)
     const [senderName, setSenderName] = useState('')
     const [caption, setCaption] = useState('')
     const [isCameraActive, setIsCameraActive] = useState(false)
@@ -27,6 +29,7 @@ export function UploadModal({ isOpen, onClose, onUploadSuccess }: UploadModalPro
             stopCamera()
             setStep('select')
             setSelectedImage(null)
+            setSelectedFile(null)
             setSenderName('')
             setCaption('')
             setProgress(0)
@@ -80,6 +83,13 @@ export function UploadModal({ isOpen, onClose, onUploadSuccess }: UploadModalPro
                 ctx.drawImage(videoRef.current, -canvas.width, 0, canvas.width, canvas.height)
                 const dataUrl = canvas.toDataURL('image/jpeg')
                 setSelectedImage(dataUrl)
+                // Convert data URL to File
+                canvas.toBlob((blob) => {
+                    if (blob) {
+                        const file = new File([blob], `capture-${Date.now()}.jpg`, { type: 'image/jpeg' })
+                        setSelectedFile(file)
+                    }
+                }, 'image/jpeg')
                 setStep('preview')
                 stopCamera()
             }
@@ -89,6 +99,7 @@ export function UploadModal({ isOpen, onClose, onUploadSuccess }: UploadModalPro
     function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0]
         if (file) {
+            setSelectedFile(file)
             const reader = new FileReader()
             reader.onload = () => {
                 setSelectedImage(reader.result as string)
@@ -98,32 +109,49 @@ export function UploadModal({ isOpen, onClose, onUploadSuccess }: UploadModalPro
         }
     }
 
-    function handleUpload() {
-        if (!selectedImage) return
+    async function handleUpload() {
+        if (!selectedImage || !selectedFile || !code) return
         setStep('uploading')
         setProgress(0)
 
-        // Simulate progress bar upload
-        const interval = setInterval(() => {
-            setProgress((prev) => {
-                if (prev >= 100) {
-                    clearInterval(interval)
-                    // Trigger success callback
-                    if (onUploadSuccess) {
-                        onUploadSuccess(
-                            selectedImage,
-                            caption || 'Shared a lovely moment!',
-                            senderName || 'Anonymous Guest'
-                        )
-                    }
-                    setTimeout(() => {
-                        onClose()
-                    }, 600)
-                    return 100
-                }
-                return prev + 10
+        try {
+            const formData = new FormData()
+            formData.append('file', selectedFile)
+            formData.append('caption', caption || 'Shared a lovely moment!')
+            formData.append('sender', senderName || 'Anonymous Guest')
+
+            const res = await fetch(`/api/invite/${code}/upload`, {
+                method: 'POST',
+                body: formData,
             })
-        }, 150)
+
+            if (!res.ok) {
+                const errData = await res.json()
+                alert(errData.error || 'Upload failed')
+                setStep('preview')
+                return
+            }
+
+            const media = await res.json()
+            setProgress(100)
+
+            // Trigger success callback
+            if (onUploadSuccess) {
+                onUploadSuccess(
+                    media.url,
+                    media.caption || 'Shared a lovely moment!',
+                    media.sender_name || 'Anonymous Guest'
+                )
+            }
+
+            setTimeout(() => {
+                onClose()
+            }, 600)
+        } catch (err) {
+            console.error('Upload error:', err)
+            alert('Upload failed. Please try again.')
+            setStep('preview')
+        }
     }
 
     if (!isOpen) return null
@@ -150,7 +178,7 @@ export function UploadModal({ isOpen, onClose, onUploadSuccess }: UploadModalPro
                 {step === 'select' && (
                     <div className="flex flex-col items-center justify-center py-6 text-center">
                         <p className="mb-6 font-sans text-sm text-muted-foreground">
-                            Capture a photo live or upload one in celebration of Kareem & Hana!
+                            Capture a photo live or upload one in celebration!
                         </p>
                         <div className="grid w-full grid-cols-2 gap-4">
                             <button
@@ -244,6 +272,7 @@ export function UploadModal({ isOpen, onClose, onUploadSuccess }: UploadModalPro
                                 <button
                                     onClick={() => {
                                         setSelectedImage(null)
+                                        setSelectedFile(null)
                                         setStep('select')
                                     }}
                                     className="flex-1 rounded-full border border-gold/20 py-2.5 font-sans text-sm text-muted-foreground transition-colors hover:text-foreground"
@@ -252,7 +281,7 @@ export function UploadModal({ isOpen, onClose, onUploadSuccess }: UploadModalPro
                                 </button>
                                 <button
                                     onClick={handleUpload}
-                                    disabled={!senderName.trim()}
+                                    disabled={!senderName.trim() || !code}
                                     className="flex-1 rounded-full bg-gold py-2.5 font-sans text-sm font-medium text-background transition-opacity hover:opacity-90 disabled:opacity-50"
                                 >
                                     Upload Photo
