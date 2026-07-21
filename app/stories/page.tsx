@@ -3,7 +3,6 @@
 import React from 'react'
 import Image from 'next/image'
 import { BottomNav } from '@/components/wedding/bottom-nav'
-import { GoldParticles } from '@/components/wedding/gold-particles'
 import { Reveal } from '@/components/wedding/reveal'
 import { BookOpen, Sparkles, Heart } from 'lucide-react'
 
@@ -19,25 +18,29 @@ const STORIES: StoryEvent[] = [
         year: '2023',
         title: 'The First Encounter',
         arabicTitle: 'اللقاء الأول',
-        description: 'Under the beautiful skies of Riyadh, our paths crossed. A simple introduction sparkled an endless conversation filled with shared laughter, core values, and mutual dreams.',
+        description:
+            'Under the beautiful skies of Riyadh, our paths crossed. A simple introduction sparkled an endless conversation filled with shared laughter, core values, and mutual dreams.',
     },
     {
         year: '2024',
         title: 'The Shared Dreams',
         arabicTitle: 'رؤية مشتركة',
-        description: 'Over countess discussions and family gatherings, Kareem & Hana realized they wanted to craft a life of commitment together. Their love flourished through support and deep friendship.',
+        description:
+            'Over countless discussions and family gatherings, Kareem & Hana realized they wanted to craft a life of commitment together. Their love flourished through support and deep friendship.',
     },
     {
         year: '2025',
         title: 'The Golden Engagement',
         arabicTitle: 'الخطوبة المباركة',
-        description: 'With the blessings of our beloved families, we promised our hearts to another in an intimate ceremony, sealing our commitment and beginning the countdown to our big night.',
+        description:
+            'With the blessings of our beloved families, we promised our hearts to another in an intimate ceremony, sealing our commitment and beginning the countdown to our big night.',
     },
     {
         year: '2026',
         title: 'The Marriage Covenant',
         arabicTitle: 'الميثاق الغليظ',
-        description: 'Celebrating the start of forever on December 30, 2026 at The Ritz-Carlton, Riyadh. Surrounded by the warmth of our relatives and friends, we embark on this sacred journey.',
+        description:
+            'Celebrating the start of forever on December 30, 2026 at The Ritz-Carlton, Riyadh. Surrounded by the warmth of our relatives and friends, we embark on this sacred journey.',
     },
 ]
 
@@ -56,8 +59,6 @@ export default function StoriesPage() {
             </div>
 
             <main className="relative mx-auto min-h-screen max-w-md overflow-hidden bg-background shadow-[0_0_80px_rgba(0,0,0,0.6)] pb-28 pt-16 md:pt-24 lg:max-w-6xl">
-                <GoldParticles count={16} />
-
                 <div className="px-6 py-8">
                     <Reveal>
                         <div className="mb-12 text-center">

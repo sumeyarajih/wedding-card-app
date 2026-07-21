@@ -2,6 +2,7 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Playfair_Display, Jost, Amiri } from 'next/font/google'
 import { MusicProvider } from '@/lib/music-context'
+import { GlobalEffects } from '@/components/wedding/global-effects'
 import './globals.css'
 
 const playfair = Playfair_Display({
@@ -48,6 +49,8 @@ export default function RootLayout({
     >
       <body className="font-sans antialiased">
         <MusicProvider>
+          {/* Persistent gold rain — fixed layer visible on every page */}
+          <GlobalEffects />
           {children}
         </MusicProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
@@ -55,4 +58,3 @@ export default function RootLayout({
     </html>
   )
 }
-

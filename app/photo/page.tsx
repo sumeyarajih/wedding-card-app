@@ -4,8 +4,9 @@ import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { BottomNav } from '@/components/wedding/bottom-nav'
-import { GoldParticles } from '@/components/wedding/gold-particles'
+
 import { Reveal } from '@/components/wedding/reveal'
+import { CoupleSlider } from '@/components/wedding/couple-slider'
 import { Camera, Heart, Sparkles, ZoomIn, Calendar } from 'lucide-react'
 
 type PhotoItem = {
@@ -88,7 +89,6 @@ export default function GalleryPage() {
             </div>
 
             <main className="relative mx-auto min-h-screen max-w-md overflow-hidden bg-background shadow-[0_0_80px_rgba(0,0,0,0.6)] pb-28 pt-16 md:pt-24 lg:max-w-6xl">
-                <GoldParticles count={16} />
 
                 <div className="px-6 py-8">
                     <Reveal>
@@ -103,6 +103,9 @@ export default function GalleryPage() {
                             </p>
                         </div>
                     </Reveal>
+
+                    {/* Couple horizontal slider */}
+                    <CoupleSlider />
 
                     {/* Grid Layout */}
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
