@@ -35,9 +35,9 @@ export default function JoinPage() {
         const data = await res.json()
         setEventInfo(data)
 
-        // Basic tier: redirect straight to a simple view
+        // Basic tier: no gating, no per-guest code — straight to the video
         if (data.tier === 'basic') {
-          router.push(`/invite/basic/${slug}`)
+          router.push(`/watch/${slug}`)
           return
         }
 
