@@ -1,6 +1,56 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+
+interface RainBead {
+  id: number
+  left: number
+  size: number
+  duration: number
+  delay: number
+  drift: number
+}
+
+function SplashRain({ count = 80, fast = false }: { count?: number; fast?: boolean }) {
+  const [beads, setBeads] = useState<RainBead[]>([])
+  useEffect(() => {
+    setBeads(
+      Array.from({ length: count }).map((_, i) => ({
+        id: i,
+        left: Math.random() * 100,
+        size: fast ? 2 + Math.random() * 3 : 1.5 + Math.random() * 2.5,
+        duration: fast ? 0.5 + Math.random() * 0.7 : 2 + Math.random() * 4,
+        delay: fast ? Math.random() * 0.4 : Math.random() * 5,
+        drift: (Math.random() - 0.5) * 20,
+      })),
+    )
+  }, [count, fast])
+
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+      {beads.map((b) => (
+        <span
+          key={b.id}
+          className={fast ? 'animate-heavy-rain absolute rounded-full bg-gold' : 'animate-rain-drop animate-shimmer-bead absolute rounded-full bg-gold'}
+          style={{
+            left: `${b.left}%`,
+            top: '-4px',
+            width: `${b.size}px`,
+            height: `${b.size * (fast ? 3 : 2)}px`,
+            animationDuration: fast
+              ? `${b.duration}s`
+              : `${b.duration}s, ${0.8 + Math.random() * 1.2}s`,
+            animationDelay: `${b.delay}s`,
+            '--drift': `${b.drift}px`,
+            filter: 'blur(0.3px)',
+            boxShadow: `0 0 6px 1px oklch(0.78 0.13 85 / 70%)`,
+          } as React.CSSProperties}
+        />
+      ))}
+    </div>
+  )
+}
 
 export function SplashScreen({
   open,
@@ -9,8 +59,26 @@ export function SplashScreen({
   open: boolean
   onOpen: () => void
 }) {
-  // Shared easing for the cinematic curtain motion.
   const curtainEase = [0.76, 0, 0.24, 1] as const
+  const [burst, setBurst] = useState(false)
+  const [leaving, setLeaving] = useState(false)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  function handleOpen() {
+    // 1. Trigger the heavy gold burst
+    setBurst(true)
+    // 2. After 1.1s, start curtain animation then invoke parent callback
+    timerRef.current = setTimeout(() => {
+      setLeaving(true)
+      setTimeout(() => onOpen(), 900)
+    }, 1100)
+  }
+
+  useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current) }, [])
+
+  // Glassmorphic panel background — dark warm tint, no image
+  const panelClass =
+    'absolute inset-0 bg-gradient-to-br from-[oklch(0.14_0.007_60)] via-[oklch(0.18_0.008_65)] to-[oklch(0.13_0.005_55)]'
 
   return (
     <AnimatePresence>
@@ -18,47 +86,44 @@ export function SplashScreen({
         <motion.div
           className="fixed inset-0 z-50 overflow-hidden"
           initial={{ opacity: 1 }}
+          animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, delay: 0.9 }}
+          transition={{ duration: 0.5, delay: 0.7 }}
         >
-          {/* LEFT veil panel — slides out to the left */}
+          {/* LEFT curtain panel */}
           <motion.div
             className="absolute inset-y-0 left-0 w-1/2 overflow-hidden"
             initial={{ x: 0 }}
-            exit={{ x: '-100%' }}
+            animate={{ x: leaving ? '-100%' : 0 }}
             transition={{ duration: 1.1, ease: curtainEase }}
           >
-            {/* Full-width image, cropped to the left half so the two panels meet seamlessly */}
-            <div
-              className="absolute inset-y-0 left-0 h-full w-[200%] bg-cover bg-center bg-no-repeat"
-              style={{ backgroundImage: "url('/images/hero-gown.png')" }}
-            />
-            <div className="absolute inset-0 bg-background/45" />
-            {/* Subtle seam highlight on the inner edge */}
-            <div className="absolute inset-y-0 right-0 w-px bg-gold/40" />
+            <div className={panelClass} />
+            {/* Raining gold beads — soft ambient */}
+            <SplashRain count={50} fast={false} />
+            {/* Heavy burst on click */}
+            {burst && <SplashRain count={100} fast={true} />}
+            {/* Gold inner seam */}
+            <div className="absolute inset-y-0 right-0 w-px bg-gold/50" />
           </motion.div>
 
-          {/* RIGHT veil panel — slides out to the right */}
+          {/* RIGHT curtain panel */}
           <motion.div
             className="absolute inset-y-0 right-0 w-1/2 overflow-hidden"
             initial={{ x: 0 }}
-            exit={{ x: '100%' }}
+            animate={{ x: leaving ? '100%' : 0 }}
             transition={{ duration: 1.1, ease: curtainEase }}
           >
-            {/* Same image, shifted left so the right edge of the left panel lines up */}
-            <div
-              className="absolute inset-y-0 right-0 h-full w-[200%] bg-cover bg-center bg-no-repeat"
-              style={{ backgroundImage: "url('/images/hero-gown.png')" }}
-            />
-            <div className="absolute inset-0 bg-background/45" />
-            <div className="absolute inset-y-0 left-0 w-px bg-gold/40" />
+            <div className={panelClass} />
+            <SplashRain count={50} fast={false} />
+            {burst && <SplashRain count={100} fast={true} />}
+            <div className="absolute inset-y-0 left-0 w-px bg-gold/50" />
           </motion.div>
 
-          {/* Center gold button over the seam */}
+          {/* Center invite button */}
           <motion.div
             className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 text-center"
-            exit={{ opacity: 0, scale: 0.7 }}
-            transition={{ duration: 0.5, ease: 'easeIn' }}
+            animate={{ opacity: leaving ? 0 : 1, scale: leaving ? 0.8 : 1 }}
+            transition={{ duration: 0.4 }}
           >
             <motion.p
               className="mb-6 font-sans text-[0.7rem] tracking-[0.5em] text-foreground uppercase drop-shadow"
@@ -71,7 +136,7 @@ export function SplashScreen({
 
             <motion.button
               type="button"
-              onClick={onOpen}
+              onClick={handleOpen}
               initial={{ opacity: 0, scale: 0.85 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
@@ -94,7 +159,7 @@ export function SplashScreen({
                 Hana
               </span>
               <span className="mt-4 rounded-full border border-gold/50 px-5 py-1 font-sans text-[0.65rem] tracking-[0.35em] text-gold uppercase transition-colors group-hover:bg-gold group-hover:text-background">
-                Open
+                {burst ? 'Opening…' : 'Open'}
               </span>
             </motion.button>
 
