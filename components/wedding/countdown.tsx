@@ -3,6 +3,7 @@
 import { CalendarHeart } from 'lucide-react'
 import { forwardRef, useEffect, useState } from 'react'
 import { Reveal } from './reveal'
+import { CalendarCard } from './calendar-card'
 
 interface CountdownProps {
   targetDate?: string
@@ -104,6 +105,9 @@ export const Countdown = forwardRef<HTMLElement, CountdownProps>(function Countd
 
   return (
     <section ref={ref} className="scroll-mt-6 px-5 py-8">
+      {/* Physical calendar card above countdown */}
+      <CalendarCard />
+
       <Reveal>
         <div className="rounded-[2rem] border border-gold/25 bg-card p-8 text-center shadow-xl">
           <p className="font-sans text-[0.65rem] tracking-[0.4em] text-muted-foreground uppercase">
