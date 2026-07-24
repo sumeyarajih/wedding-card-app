@@ -20,45 +20,31 @@ import { ContactModal } from './contact-modal'
 interface BottomNavProps {
   code?: string
   tier?: 'basic' | 'premium' | 'royal'
+  hostNames?: string
 }
 
-export function BottomNav({ code, tier }: BottomNavProps) {
+const DEFAULT_HOST_NAMES = 'Kareem & Hana'
+
+export function BottomNav({ code, tier, hostNames = DEFAULT_HOST_NAMES }: BottomNavProps) {
   const pathname = usePathname()
   const { playing, toggleMusic } = useMusic()
   const [uploadOpen, setUploadOpen] = useState(false)
   const [contactOpen, setContactOpen] = useState(false)
 
-  function handleUploadSuccess(url: string, caption: string, sender: string) {
-    const newItem = {
-      id: 'upload-' + Date.now(),
-      url,
-      caption,
-      sender,
-      date: new Date().toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      })
-    }
-    const saved = localStorage.getItem('wedding_gallery_uploads')
-    let current = []
-    if (saved) {
-      try {
-        current = JSON.parse(saved)
-      } catch (e) {
-        console.error(e)
-      }
-    }
-    const updated = [newItem, ...current]
-    localStorage.setItem('wedding_gallery_uploads', JSON.stringify(updated))
-    window.dispatchEvent(new Event('storage'))
-  }
+  const homePath = code ? `/invite/${code}` : '/'
+  const photoPath = code ? `/invite/${code}/photo` : '/photo'
+  const storiesPath = code ? `/invite/${code}/stories` : '/stories'
 
   const items = [
-    { label: 'Home', icon: Home, path: '/', action: null },
-    { label: 'Photo', icon: ImageIcon, path: '/photo', action: null },
-    { label: 'Stories', icon: BookOpen, path: '/stories', action: null },
-    { label: 'Upload', icon: Camera, path: null, action: () => setUploadOpen(true) },
+    { label: 'Home', icon: Home, path: homePath, action: null },
+    { label: 'Photo', icon: ImageIcon, path: photoPath, action: null },
+    { label: 'Stories', icon: BookOpen, path: storiesPath, action: null },
+    // Uploads are a royal-tier feature — hide the button entirely for
+    // basic/premium instead of letting guests fill out the whole flow
+    // just to be rejected by the API at the end.
+    ...(tier === 'royal'
+      ? [{ label: 'Upload', icon: Camera, path: null, action: () => setUploadOpen(true) }]
+      : []),
     {
       label: playing ? 'Pause' : 'Music',
       icon: playing ? Pause : Music,
@@ -122,10 +108,10 @@ export function BottomNav({ code, tier }: BottomNavProps) {
       <header className="fixed inset-x-0 top-0 z-40 hidden justify-center px-6 py-4 md:flex">
         <div className="flex w-full max-w-5xl items-center justify-between rounded-full border border-gold/15 bg-card/60 px-8 py-3.5 shadow-xl backdrop-blur-xl transition-all duration-300">
           {/* Logo / Brand */}
-          <Link href="/" className="group flex items-center gap-2 no-underline">
+          <Link href={homePath} className="group flex items-center gap-2 no-underline">
             <Sparkles className="h-5 w-5 text-gold group-hover:rotate-12 transition-transform duration-300" />
             <span className="font-serif text-lg tracking-wider gold-gradient-text font-semibold">
-              Kareem & Hana
+              {hostNames}
             </span>
           </Link>
 
@@ -175,7 +161,7 @@ export function BottomNav({ code, tier }: BottomNavProps) {
       </header>
 
       {/* Modals for Camera Upload and Call Support */}
-      <UploadModal isOpen={uploadOpen} onClose={() => setUploadOpen(false)} onUploadSuccess={handleUploadSuccess} code={code} />
+      <UploadModal isOpen={uploadOpen} onClose={() => setUploadOpen(false)} code={code} />
       <ContactModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />
     </>
   )
