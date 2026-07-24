@@ -23,7 +23,8 @@ export const MapSection = forwardRef<HTMLElement, MapSectionProps>(function MapS
   ref,
 ) {
     const directionsUrl = `https://maps.google.com/maps?q=${mapQuery}`
-    const embedUrl = `https://www.google.com/maps/embed/v1/place?key=&q=${mapQuery}`
+    // Keyless embed — no Google Maps API key needed, works for any venue query.
+    const embedUrl = `https://www.google.com/maps?q=${mapQuery}&output=embed`
 
     return (
         <section ref={ref} className="scroll-mt-20 px-5 py-8" id="venue-map">
