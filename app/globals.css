@@ -46,31 +46,68 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Slow-moving gold particle / shimmer helpers */
-@keyframes float-particle {
+/* ─── Gold Rain Particles ─────────────────────────────────────────────── */
+@keyframes rain-drop {
   0% {
-    transform: translateY(0) translateX(0);
+    transform: translateY(-5vh) translateX(0px) scaleY(1);
     opacity: 0;
   }
-  10% {
+  5% {
+    opacity: 1;
+  }
+  80% {
     opacity: 0.8;
   }
-  90% {
-    opacity: 0.6;
-  }
   100% {
-    transform: translateY(-120px) translateX(20px);
+    transform: translateY(110vh) translateX(var(--drift, 12px)) scaleY(1.4);
     opacity: 0;
   }
 }
 
-.animate-float-particle {
-  animation: float-particle linear infinite;
+@keyframes shimmer-bead {
+  0%, 100% {
+    box-shadow: 0 0 4px 1px oklch(0.78 0.13 85 / 80%),
+                0 0 10px 2px oklch(0.78 0.13 85 / 40%);
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 8px 3px oklch(0.88 0.12 90 / 100%),
+                0 0 20px 6px oklch(0.82 0.14 85 / 60%);
+    opacity: 1;
+    transform: scale(1.35);
+  }
 }
 
-@keyframes pulse-ring {
-  0%,
+.animate-rain-drop {
+  animation: rain-drop linear infinite;
+}
+
+.animate-shimmer-bead {
+  animation: shimmer-bead ease-in-out infinite alternate;
+}
+
+/* Heavy burst rain — faster speed multiplier applied inline */
+@keyframes heavy-rain {
+  0% {
+    transform: translateY(-5vh);
+    opacity: 0;
+  }
+  3% { opacity: 1; }
+  95% { opacity: 0.9; }
   100% {
+    transform: translateY(115vh);
+    opacity: 0;
+  }
+}
+
+.animate-heavy-rain {
+  animation: heavy-rain linear forwards;
+}
+
+/* ─── Pulse ring ── */
+@keyframes pulse-ring {
+  0%, 100% {
     box-shadow:
       0 0 0 0 oklch(0.78 0.13 85 / 45%),
       0 0 40px oklch(0.78 0.13 85 / 30%);
@@ -86,6 +123,17 @@ body {
   animation: pulse-ring 2.6s ease-in-out infinite;
 }
 
+/* ─── Spin slow ── */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+/* ─── Gold gradient text ── */
 .gold-gradient-text {
   background: linear-gradient(
     135deg,
@@ -100,4 +148,22 @@ body {
 
 .text-balance {
   text-wrap: balance;
+}
+
+/* ─── Floating bead for splash inner rain ── */
+@keyframes float-particle {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.6; }
+  100% {
+    transform: translateY(-120px) translateX(20px);
+    opacity: 0;
+  }
+}
+
+.animate-float-particle {
+  animation: float-particle linear infinite;
 }
