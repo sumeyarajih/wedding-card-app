@@ -188,6 +188,7 @@ export function InviteClient({ data }: Props) {
         <BottomNav
           code={guest.code}
           tier={event.tier}
+          hostNames={event.host_names}
         />
       )}
 
