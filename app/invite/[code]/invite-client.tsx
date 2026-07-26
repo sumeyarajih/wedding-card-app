@@ -167,6 +167,7 @@ export function InviteClient({ data }: Props) {
           <Rsvp
             ref={rsvpRef}
             code={guest.code}
+            guestName={guest.guest_name}
           />
 
           {/* Entry Pass for premium/royal */}
