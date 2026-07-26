@@ -1,70 +1,71 @@
 'use client'
 
-import { Heart, Send, Users } from 'lucide-react'
+import { Heart, Send, Users, Loader2 } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { forwardRef, useState } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 import { Reveal } from './reveal'
 
 type Wish = {
-  id: number
+  id: string
   name: string
   message: string
   status: 'attending' | 'apologizing'
 }
 
-const SEED: Wish[] = [
-  {
-    id: 1,
-    name: 'Layla A.',
-    message:
-      'Congratulations! Wishing you a lifetime of love, laughter, and happiness together.',
-    status: 'attending',
-  },
-  {
-    id: 2,
-    name: 'Omar S.',
-    message: 'So happy for you both. May your marriage be blessed forever!',
-    status: 'attending',
-  },
-  {
-    id: 3,
-    name: 'Noura K.',
-    message:
-      'Sending all my love. Sadly I cannot make it, but my heart is with you.',
-    status: 'apologizing',
-  },
-]
-
 interface RsvpProps {
   code?: string
+  guestName?: string
 }
 
 export const Rsvp = forwardRef<HTMLElement, RsvpProps>(function Rsvp(
-  { code },
+  { code, guestName },
   ref,
 ) {
-  const [wishes, setWishes] = useState<Wish[]>(SEED)
-  const [confirmed, setConfirmed] = useState(105)
+  const [wishes, setWishes] = useState<Wish[]>([])
+  const [confirmed, setConfirmed] = useState(0)
+  const [loadingWishes, setLoadingWishes] = useState(true)
   const [status, setStatus] = useState<'attending' | 'apologizing'>('attending')
   const [guests, setGuests] = useState(1)
-  const [name, setName] = useState('')
   const [message, setMessage] = useState('')
   const [submitted, setSubmitted] = useState(false)
 
+  useEffect(() => {
+    if (!code) {
+      setLoadingWishes(false)
+      return
+    }
+    fetch(`/api/invite/${code}/wishes`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data) {
+          setWishes(
+            data.wishes.map((w: Omit<Wish, 'id'>, i: number) => ({
+              ...w,
+              id: `${i}-${w.name}`,
+            })),
+          )
+          setConfirmed(data.confirmedCount)
+        }
+      })
+      .catch((err) => console.error('Wishes fetch error:', err))
+      .finally(() => setLoadingWishes(false))
+  }, [code])
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!name.trim() || !message.trim()) return
+    if (!message.trim()) return
+
+    const displayName = guestName || 'A Guest'
 
     // Optimistic UI update
     setWishes((prev) => [
-      { id: Date.now(), name: name.trim(), message: message.trim(), status },
+      { id: `local-${Date.now()}`, name: displayName, message: message.trim(), status },
       ...prev,
     ])
     if (status === 'attending') {
       setConfirmed((c) => c + guests)
     }
 
-    // POST to API if we have a code
     if (code) {
       try {
         await fetch(`/api/invite/${code}/rsvp`, {
@@ -81,7 +82,6 @@ export const Rsvp = forwardRef<HTMLElement, RsvpProps>(function Rsvp(
       }
     }
 
-    setName('')
     setMessage('')
     setGuests(1)
     setStatus('attending')
@@ -119,6 +119,12 @@ export const Rsvp = forwardRef<HTMLElement, RsvpProps>(function Rsvp(
           onSubmit={handleSubmit}
           className="mx-auto max-w-md rounded-[2rem] border border-gold/25 bg-card p-6 shadow-xl"
         >
+          {guestName && (
+            <p className="mb-4 font-sans text-sm text-muted-foreground">
+              Responding as <span className="text-foreground font-medium">{guestName}</span>
+            </p>
+          )}
+
           <div className="mb-4 grid grid-cols-2 gap-2">
             {(['attending', 'apologizing'] as const).map((s) => (
               <button
@@ -135,15 +141,6 @@ export const Rsvp = forwardRef<HTMLElement, RsvpProps>(function Rsvp(
               </button>
             ))}
           </div>
-
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Your name"
-            required
-            className="mb-3 w-full rounded-xl border border-gold/20 bg-background/60 px-4 py-3 font-sans text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-gold focus:outline-none"
-          />
 
           <div className="mb-3 flex items-center justify-between rounded-xl border border-gold/20 bg-background/60 px-4 py-2.5">
             <span className="font-sans text-sm text-muted-foreground">
@@ -210,6 +207,19 @@ export const Rsvp = forwardRef<HTMLElement, RsvpProps>(function Rsvp(
           <h3 className="mb-4 text-center font-serif text-xl text-gold">
             Congratulations Wall
           </h3>
+
+          {loadingWishes && (
+            <div className="flex justify-center py-8">
+              <Loader2 className="h-5 w-5 animate-spin text-gold" />
+            </div>
+          )}
+
+          {!loadingWishes && wishes.length === 0 && (
+            <p className="text-center font-sans text-sm text-muted-foreground py-8">
+              Be the first to send your wishes!
+            </p>
+          )}
+
           <div className="flex max-h-96 flex-col gap-3 overflow-y-auto pr-1">
             <AnimatePresence initial={false}>
               {wishes.map((w) => (
