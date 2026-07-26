@@ -4,32 +4,37 @@ import { useEffect, useState } from 'react'
 
 interface Particle {
   id: number
-  left: number
-  size: number
-  duration: number
-  delay: number
-  drift: number
-  shimmerDuration: number
-  shimmerDelay: number
+  left: string        // final left % — random, fixed
+  size: number        // width in px (height = 2.2x)
+  fallDur: number     // rain-fall animation duration
+  fallDelay: number   // negative = pre-started, never waits
+  glowDur: number     // gold-glow animation duration
+  glowDelay: number
 }
 
-// Fixed viewport rain layer — renders on every page via layout.tsx GlobalEffects
-export function GoldParticles({ count = 55 }: { count?: number }) {
+/**
+ * Renders a fixed-viewport layer of tiny shining golden rain drops.
+ * Two completely separate animations are used:
+ *   - rain-fall  → animates transform: translateY only
+ *   - gold-glow  → animates box-shadow + opacity only
+ * This avoids the "two animations conflict over `transform`" bug.
+ *
+ * Particles start at negative delay so they are already in-flight
+ * on first render — there is no initial pause, the rain never stops.
+ */
+export function GoldParticles({ count = 60 }: { count?: number }) {
   const [particles, setParticles] = useState<Particle[]>([])
 
   useEffect(() => {
     setParticles(
       Array.from({ length: count }).map((_, i) => ({
         id: i,
-        left: Math.random() * 100,
-        // thin elongated teardrop shape
-        size: 1.8 + Math.random() * 2.5,
-        // each bead gets its own looping duration so they stagger naturally
-        duration: 4 + Math.random() * 9,
-        delay: -(Math.random() * 12), // negative delay = pre-started loops
-        drift: (Math.random() - 0.5) * 50,
-        shimmerDuration: 0.7 + Math.random() * 1.4,
-        shimmerDelay: -(Math.random() * 2),
+        left: `${(Math.random() * 98 + 1).toFixed(2)}%`,
+        size: 1.6 + Math.random() * 2.8,
+        fallDur: 5 + Math.random() * 9,
+        fallDelay: -(Math.random() * 14),   // already mid-fall on mount
+        glowDur: 0.8 + Math.random() * 1.6,
+        glowDelay: -(Math.random() * 2),
       })),
     )
   }, [count])
@@ -37,29 +42,34 @@ export function GoldParticles({ count = 55 }: { count?: number }) {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-[5] overflow-hidden"
+      style={{
+        position: 'fixed',
+        inset: 0,
+        pointerEvents: 'none',
+        overflow: 'hidden',
+        zIndex: 9998,       // above everything except modals (z-50 = 50 < 9998)
+      }}
     >
       {particles.map((p) => (
         <span
           key={p.id}
           style={{
             position: 'absolute',
-            left: `${p.left}%`,
-            top: '-8px',
+            top: 0,
+            left: p.left,
             width: `${p.size}px`,
-            height: `${p.size * 2.8}px`,
-            borderRadius: '50% 50% 60% 60%',
-            background: 'oklch(0.78 0.13 85)',
-            animationName: 'rain-drop, shimmer-bead',
-            animationDuration: `${p.duration}s, ${p.shimmerDuration}s`,
-            animationDelay: `${p.delay}s, ${p.shimmerDelay}s`,
+            height: `${(p.size * 2.2).toFixed(1)}px`,
+            borderRadius: '50% 50% 55% 55%',
+            background: 'oklch(0.80 0.13 85)',
+            // rain-fall controls Y position only
+            animationName: 'rain-fall, gold-glow',
+            animationDuration: `${p.fallDur}s, ${p.glowDur}s`,
+            animationDelay: `${p.fallDelay}s, ${p.glowDelay}s`,
             animationTimingFunction: 'linear, ease-in-out',
             animationIterationCount: 'infinite, infinite',
-            animationFillMode: 'none',
-            // CSS variable for the inline drift
-            ['--drift' as string]: `${p.drift}px`,
-            filter: 'blur(0.15px)',
-            willChange: 'transform, opacity, box-shadow',
+            animationDirection: 'normal, alternate',
+            animationFillMode: 'none, none',
+            willChange: 'transform',
           }}
         />
       ))}

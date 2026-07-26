@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import Image from 'next/image'
 import { SplashScreen } from '@/components/wedding/splash-screen'
 import { Hero } from '@/components/wedding/hero'
 import { InvitationCard } from '@/components/wedding/invitation-card'
@@ -11,6 +10,8 @@ import { Rules } from '@/components/wedding/rules'
 import { Rsvp } from '@/components/wedding/rsvp'
 import { MapSection } from '@/components/wedding/map-section'
 import { BottomNav } from '@/components/wedding/bottom-nav'
+import { CoupleSlider } from '@/components/wedding/couple-slider'
+import { PageBackground } from '@/components/wedding/page-background'
 import { useMusic } from '@/lib/music-context'
 
 export default function Page() {
@@ -26,8 +27,8 @@ export default function Page() {
 
   // requestAnimationFrame id for smooth continuous scroll
   const rafRef = useRef<number | null>(null)
-  // speed in px/frame — adjust lower = slower drift
-  const SCROLL_SPEED = 0.45
+  // speed in px/frame — 1.4 gives a steady visible drift through all sections
+  const SCROLL_SPEED = 1.4
 
   function stopContinuousScroll() {
     if (rafRef.current !== null) {
@@ -38,6 +39,8 @@ export default function Page() {
 
   function startContinuousScroll() {
     stopContinuousScroll()
+    // Make sure page starts at the very top (hero)
+    window.scrollTo({ top: 0, behavior: 'instant' })
 
     function tick() {
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight
@@ -49,10 +52,10 @@ export default function Page() {
       rafRef.current = requestAnimationFrame(tick)
     }
 
-    // Small delay after splash curtains fully part
+    // Start immediately after curtains fully part (~1.2 s)
     setTimeout(() => {
       rafRef.current = requestAnimationFrame(tick)
-    }, 2200)
+    }, 1400)
   }
 
   useEffect(() => () => stopContinuousScroll(), [])
@@ -78,21 +81,13 @@ export default function Page() {
       window.addEventListener('touchmove', cancel, { passive: true })
       window.addEventListener('keydown', cancel)
       window.addEventListener('pointerdown', cancel)
-    }, 2400)
+    }, 1600)
   }
 
   return (
     <>
-      {/* Desktop background */}
-      <div aria-hidden="true" className="fixed inset-0 -z-10">
-        <Image
-          src="/images/riyadh-bg.png"
-          alt=""
-          fill
-          className="scale-110 object-cover opacity-40 blur-xl"
-        />
-        <div className="absolute inset-0 bg-background/70" />
-      </div>
+      {/* Shared scenic background with gold rain */}
+      <PageBackground />
 
       <main className="relative mx-auto min-h-screen max-w-md overflow-hidden bg-background shadow-[0_0_80px_rgba(0,0,0,0.6)] lg:max-w-6xl">
         <div className="relative pb-28 pt-16 md:pt-24">
@@ -113,6 +108,9 @@ export default function Page() {
               <Rules />
             </div>
           </div>
+
+          {/* Photo slider ribbon — before the map */}
+          <CoupleSlider />
 
           {/* Map */}
           <MapSection ref={mapRef} />

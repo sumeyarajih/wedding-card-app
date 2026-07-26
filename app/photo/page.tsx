@@ -4,10 +4,10 @@ import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { BottomNav } from '@/components/wedding/bottom-nav'
-
+import { PageBackground } from '@/components/wedding/page-background'
 import { Reveal } from '@/components/wedding/reveal'
+import { Camera, Heart, ZoomIn, Calendar } from 'lucide-react'
 import { CoupleSlider } from '@/components/wedding/couple-slider'
-import { Camera, Heart, Sparkles, ZoomIn, Calendar } from 'lucide-react'
 
 type PhotoItem = {
     id: string
@@ -77,16 +77,7 @@ export default function GalleryPage() {
 
     return (
         <>
-            {/* Desktop framing: Riyadh bg */}
-            <div aria-hidden="true" className="fixed inset-0 -z-10">
-                <Image
-                    src="/images/riyadh-bg.png"
-                    alt=""
-                    fill
-                    className="scale-110 object-cover opacity-40 blur-xl"
-                />
-                <div className="absolute inset-0 bg-background/70" />
-            </div>
+            <PageBackground />
 
             <main className="relative mx-auto min-h-screen max-w-md overflow-hidden bg-background shadow-[0_0_80px_rgba(0,0,0,0.6)] pb-28 pt-16 md:pt-24 lg:max-w-6xl">
 
