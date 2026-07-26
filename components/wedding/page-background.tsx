@@ -12,17 +12,17 @@ import { GoldParticles } from '@/components/wedding/gold-particles'
  * To change the wedding card background colour, edit the gradient below.
  * To add a background image, replace the gradient div with an <Image fill … />.
  */
-export function PageBackground() {
-    return (
-        <>
-            {/* ── Warm dark scenery ─────────────────────────────────────────── */}
-            <div
-                aria-hidden="true"
-                style={{
-                    position: 'fixed',
-                    inset: 0,
-                    zIndex: -1,
-                    background: `
+export function PageBackground({ renderRain = true }: { renderRain?: boolean }) {
+  return (
+    <>
+      {/* ── Warm dark scenery ─────────────────────────────────────────── */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: -1,
+          background: `
             radial-gradient(
               ellipse 120% 80% at 50% -10%,
               oklch(0.30 0.06 80 / 60%) 0%,
@@ -35,11 +35,11 @@ export function PageBackground() {
             ),
             oklch(0.14 0.006 60)
           `,
-                }}
-            />
+        }}
+      />
 
-            {/* ── Continuous tiny golden rain beads ─────────────────────────── */}
-            <GoldParticles count={65} />
-        </>
-    )
+      {/* ── Continuous tiny golden rain beads ─────────────────────────── */}
+      {renderRain && <GoldParticles count={65} />}
+    </>
+  )
 }

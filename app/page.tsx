@@ -5,13 +5,14 @@ import { SplashScreen } from '@/components/wedding/splash-screen'
 import { Hero } from '@/components/wedding/hero'
 import { InvitationCard } from '@/components/wedding/invitation-card'
 import { Countdown } from '@/components/wedding/countdown'
-import { Schedule } from '@/components/wedding/schedule'
+import { EventProgram } from '@/components/wedding/event-program'
 import { Rules } from '@/components/wedding/rules'
 import { Rsvp } from '@/components/wedding/rsvp'
 import { MapSection } from '@/components/wedding/map-section'
 import { BottomNav } from '@/components/wedding/bottom-nav'
 import { CoupleSlider } from '@/components/wedding/couple-slider'
 import { PageBackground } from '@/components/wedding/page-background'
+import { Reveal } from '@/components/wedding/reveal'
 import { useMusic } from '@/lib/music-context'
 
 export default function Page() {
@@ -87,7 +88,7 @@ export default function Page() {
   return (
     <>
       {/* Shared scenic background with gold rain */}
-      <PageBackground />
+      <PageBackground renderRain={!splashOpen} />
 
       <main className="relative mx-auto min-h-screen max-w-md overflow-hidden bg-background shadow-[0_0_80px_rgba(0,0,0,0.6)] lg:max-w-6xl">
         <div className="relative pb-28 pt-16 md:pt-24">
@@ -96,27 +97,39 @@ export default function Page() {
           </div>
 
           {/* Invitation + Countdown side-by-side on large screens */}
-          <div className="mx-auto lg:grid lg:max-w-5xl lg:grid-cols-2 lg:items-start lg:gap-4">
-            <InvitationCard ref={locationRef} />
-            <Countdown ref={countdownRef} />
-          </div>
+          <Reveal>
+            <div className="mx-auto lg:grid lg:max-w-5xl lg:grid-cols-2 lg:items-start lg:gap-4">
+              <InvitationCard ref={locationRef} />
+              <Countdown ref={countdownRef} />
+            </div>
+          </Reveal>
 
-          {/* Schedule + Rules */}
-          <div className="mx-auto lg:grid lg:max-w-5xl lg:grid-cols-2 lg:items-start lg:gap-8">
-            <Schedule />
+          {/* Event Program + Rules */}
+          <div className="mx-auto lg:grid lg:max-w-5xl lg:grid-cols-2 lg:items-center lg:gap-8 mt-16">
+            <EventProgram />
             <div ref={rulesRef}>
-              <Rules />
+              <Reveal>
+                <Rules />
+              </Reveal>
             </div>
           </div>
 
           {/* Photo slider ribbon — before the map */}
-          <CoupleSlider />
+          <Reveal>
+            <div className="mt-8">
+              <CoupleSlider />
+            </div>
+          </Reveal>
 
           {/* Map */}
-          <MapSection ref={mapRef} />
+          <Reveal>
+            <MapSection ref={mapRef} />
+          </Reveal>
 
           {/* RSVP */}
-          <Rsvp ref={rsvpRef} />
+          <Reveal>
+            <Rsvp ref={rsvpRef} />
+          </Reveal>
 
           <footer className="px-6 py-10 text-center">
             <div className="mx-auto mb-4 h-px w-16 bg-gold/40" />
