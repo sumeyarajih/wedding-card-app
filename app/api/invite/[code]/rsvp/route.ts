@@ -35,6 +35,7 @@ export async function POST(
       rsvp_status: status,
       rsvp_guest_count: guests ?? null,
       rsvp_message: message ?? null,
+      rsvp_submitted_at: new Date().toISOString(),
     })
     .eq('id', guest.id)
     .select('*')
