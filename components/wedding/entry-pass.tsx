@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
 
 interface EntryPassProps {
@@ -7,9 +8,17 @@ interface EntryPassProps {
 }
 
 export function EntryPass({ code }: EntryPassProps) {
-  const inviteUrl = typeof window !== 'undefined'
-    ? `${window.location.origin}/invite/${code}`
-    : `/invite/${code}`
+  // Computing window.location.origin during the render that has to match
+  // the server would cause a hydration mismatch (server has no window, so
+  // it'd render a different, shorter URL — a different-length string
+  // produces a different-sized QR image). Instead: render nothing QR-shaped
+  // until after mount, then fill it in — this render happens purely on the
+  // client, after hydration already succeeded, so nothing to mismatch.
+  const [inviteUrl, setInviteUrl] = useState<string | null>(null)
+
+  useEffect(() => {
+    setInviteUrl(`${window.location.origin}/invite/${code}`)
+  }, [code])
 
   return (
     <section className="px-5 py-8">
@@ -28,13 +37,17 @@ export function EntryPass({ code }: EntryPassProps) {
         </div>
 
         <div className="mx-auto flex w-fit items-center justify-center rounded-2xl border border-gold/20 bg-white p-4">
-          <QRCodeSVG
-            value={inviteUrl}
-            size={180}
-            level="M"
-            fgColor="#1a1a1a"
-            bgColor="#ffffff"
-          />
+          {inviteUrl ? (
+            <QRCodeSVG
+              value={inviteUrl}
+              size={180}
+              level="M"
+              fgColor="#1a1a1a"
+              bgColor="#ffffff"
+            />
+          ) : (
+            <div className="h-[180px] w-[180px] animate-pulse rounded-lg bg-gold/10" />
+          )}
         </div>
 
         <p className="mt-4 font-sans text-xs text-muted-foreground">

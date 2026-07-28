@@ -7,7 +7,6 @@ import { SplashScreen } from '@/components/wedding/splash-screen'
 import { Hero } from '@/components/wedding/hero'
 import { InvitationCard } from '@/components/wedding/invitation-card'
 import { Countdown } from '@/components/wedding/countdown'
-import { Schedule } from '@/components/wedding/schedule'
 import { Rules } from '@/components/wedding/rules'
 import { Rsvp } from '@/components/wedding/rsvp'
 import { MapSection } from '@/components/wedding/map-section'
@@ -170,7 +169,7 @@ export function InviteClient({ data }: Props) {
             guestName={guest.guest_name}
           />
 
-          {/* Entry Pass for premium/royal */}
+            {/* Entry Pass for premium/royal */}
           {(event.tier === 'premium' || event.tier === 'royal') && (
             <EntryPass code={guest.code} />
           )}
