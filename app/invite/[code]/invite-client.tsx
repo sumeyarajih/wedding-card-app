@@ -14,6 +14,7 @@ import { BottomNav } from '@/components/wedding/bottom-nav'
 import { GoldParticles } from '@/components/wedding/gold-particles'
 import { EntryPass } from '@/components/wedding/entry-pass'
 import { useMusic } from '@/lib/music-context'
+import { EventProgram } from '@/components/wedding/event-program'
 
 interface Props {
   data: InviteResponse
@@ -150,7 +151,7 @@ export function InviteClient({ data }: Props) {
           </div>
 
           <div className="mx-auto lg:grid lg:max-w-5xl lg:grid-cols-2 lg:items-start lg:gap-8">
-            <Schedule />
+<EventProgram />
             <div ref={rulesRef}>
               <Rules />
             </div>
