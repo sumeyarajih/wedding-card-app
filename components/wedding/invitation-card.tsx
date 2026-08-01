@@ -39,7 +39,7 @@ export const InvitationCard = forwardRef<HTMLElement>(function InvitationCard(
             <p className="mx-auto mt-6 max-w-sm font-serif text-lg leading-relaxed text-pretty text-foreground/90 italic">
               With hearts full of joy, we invite you to share in the celebration
               of love as
-              <span className="text-gold"> Kareem &amp; Hana </span>
+              <span className="text-gold"> Mohammed &amp; Sebat </span>
               begin their journey together as one.
             </p>
 
@@ -50,21 +50,11 @@ export const InvitationCard = forwardRef<HTMLElement>(function InvitationCard(
             </div>
 
             <p className="font-serif text-xl text-foreground">
-              The Ritz-Carlton, Riyadh
+              Dire Dawa , Ethiopia
             </p>
             <p className="mt-1 font-sans text-sm text-muted-foreground">
-              Al Hada District, Riyadh, Saudi Arabia
+              Around Sami |Restirants, Dire Dawa
             </p>
-
-            <a
-              href={MAPS_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-6 inline-flex items-center gap-2 rounded-full border border-gold/50 bg-gold/10 px-6 py-3 font-sans text-sm tracking-wide text-gold transition-colors hover:bg-gold hover:text-background"
-            >
-              <MapPin className="h-4 w-4" />
-              Open in Google Maps
-            </a>
           </div>
         </div>
       </Reveal>

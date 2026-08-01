@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { SplashScreen } from '@/components/wedding/splash-screen'
 import { Hero } from '@/components/wedding/hero'
+import { WelcomeSection } from '@/components/wedding/welcome-section'
 import { InvitationCard } from '@/components/wedding/invitation-card'
 import { Countdown } from '@/components/wedding/countdown'
 import { EventProgram } from '@/components/wedding/event-program'
@@ -14,6 +15,7 @@ import { CoupleSlider } from '@/components/wedding/couple-slider'
 import { PageBackground } from '@/components/wedding/page-background'
 import { Reveal } from '@/components/wedding/reveal'
 import { useMusic } from '@/lib/music-context'
+import { COUPLE, WEDDING_DATE } from '@/lib/wedding.config'
 
 export default function Page() {
   const [splashOpen, setSplashOpen] = useState(true)
@@ -28,8 +30,8 @@ export default function Page() {
 
   // requestAnimationFrame id for smooth continuous scroll
   const rafRef = useRef<number | null>(null)
-  // speed in px/frame — 1.4 gives a steady visible drift through all sections
-  const SCROLL_SPEED = 1.4
+  // speed in px/frame — Increased speed significantly per user request
+  const SCROLL_SPEED = 3.5
 
   function stopContinuousScroll() {
     if (rafRef.current !== null) {
@@ -59,12 +61,28 @@ export default function Page() {
     }, 1400)
   }
 
-  useEffect(() => () => stopContinuousScroll(), [])
+  useEffect(() => {
+    // Make sure we start at top of page under the transparent splash screen
+    if (splashOpen) {
+      window.scrollTo(0, 0)
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+
+    return () => {
+      stopContinuousScroll()
+      document.body.style.overflow = ''
+    }
+  }, [splashOpen])
 
   function handleOpen() {
     setSplashOpen(false)
+    document.body.style.overflow = ''
+    window.scrollTo({ top: 0, behavior: 'instant' })
     playMusic()
-    startContinuousScroll()
+    // We no longer start continuous scroll immediately; 
+    // it will instead be triggered by `onVideoEnd` down in the Hero component!
 
     // Any deliberate user scroll/touch/key cancels the drift
     const cancel = () => {
@@ -75,7 +93,7 @@ export default function Page() {
       window.removeEventListener('keydown', cancel)
       window.removeEventListener('pointerdown', cancel)
     }
-    // Defer so the opening animation doesn't self-cancel
+    // Defer attaching listeners until slightly after the splash opens
     setTimeout(() => {
       window.addEventListener('wheel', cancel, { passive: true })
       window.addEventListener('touchstart', cancel, { passive: true })
@@ -91,10 +109,12 @@ export default function Page() {
       <PageBackground renderRain={!splashOpen} />
 
       <main className="relative mx-auto min-h-screen max-w-md overflow-hidden bg-background shadow-[0_0_80px_rgba(0,0,0,0.6)] lg:max-w-6xl">
-        <div className="relative pb-28 pt-16 md:pt-24">
+        <div className="relative pb-28">
           <div ref={heroRef}>
-            <Hero />
+            <Hero isPlaying={!splashOpen} onVideoEnd={startContinuousScroll} />
           </div>
+
+          <WelcomeSection />
 
           {/* Invitation + Countdown side-by-side on large screens */}
           <Reveal>
@@ -133,9 +153,11 @@ export default function Page() {
 
           <footer className="px-6 py-10 text-center">
             <div className="mx-auto mb-4 h-px w-16 bg-gold/40" />
-            <p className="font-serif text-2xl text-gold">Kareem &amp; Hana</p>
+            <p className="font-serif text-2xl text-gold">
+              {COUPLE.groomName} &amp; {COUPLE.brideName}
+            </p>
             <p className="mt-2 font-sans text-xs tracking-[0.3em] text-muted-foreground uppercase">
-              30 · 12 · 2026 · Riyadh
+              {WEDDING_DATE.dayNumber} · {WEDDING_DATE.monthNumber} · {WEDDING_DATE.yearEnglish} · Dire Dawa
             </p>
           </footer>
         </div>

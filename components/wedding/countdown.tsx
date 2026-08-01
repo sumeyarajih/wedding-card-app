@@ -4,18 +4,19 @@ import { CalendarHeart } from 'lucide-react'
 import { forwardRef, useEffect, useState } from 'react'
 import { Reveal } from './reveal'
 import { CalendarCard } from './calendar-card'
+import { COUPLE, VENUE } from '@/lib/wedding.config'
 
-const TARGET = new Date('2026-12-30T16:49:00+03:00').getTime()
+const TARGET = new Date('2026-08-08T16:49:00+03:00').getTime()
 
 const GCAL_URL =
   'https://calendar.google.com/calendar/render?action=TEMPLATE' +
   '&text=' +
-  encodeURIComponent('Wedding of Kareem & Hana') +
-  '&dates=20261230T134900Z/20261230T190000Z' +
+  encodeURIComponent(`Wedding of ${COUPLE.displayName}`) +
+  '&dates=20260808T134900Z/20260808T190000Z' +
   '&details=' +
-  encodeURIComponent('Join us to celebrate the wedding of Kareem & Hana.') +
+  encodeURIComponent(`Join us to celebrate the wedding of ${COUPLE.displayName}.`) +
   '&location=' +
-  encodeURIComponent('The Ritz-Carlton, Riyadh, Al Hada District, Riyadh, Saudi Arabia')
+  encodeURIComponent(VENUE.address)
 
 function getRemaining() {
   const diff = Math.max(0, TARGET - Date.now())
@@ -31,15 +32,15 @@ function downloadIcs() {
   const ics = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Kareem and Hana//Wedding//EN',
+    `PRODID:-//${COUPLE.displayName}//Wedding//EN`,
     'BEGIN:VEVENT',
-    'UID:kareem-hana-wedding@invitation',
+    'UID:wedding-invitation-2026-08',
     'DTSTAMP:20260101T000000Z',
-    'DTSTART:20261230T134900Z',
-    'DTEND:20261230T190000Z',
-    'SUMMARY:Wedding of Kareem & Hana',
-    'DESCRIPTION:Join us to celebrate the wedding of Kareem & Hana.',
-    'LOCATION:The Ritz-Carlton\\, Riyadh\\, Saudi Arabia',
+    'DTSTART:20260808T134900Z',
+    'DTEND:20260808T190000Z',
+    `SUMMARY:Wedding of ${COUPLE.displayName}`,
+    `DESCRIPTION:Join us to celebrate the wedding of ${COUPLE.displayName}.`,
+    `LOCATION:${VENUE.address.replace(/,/g, '\\,')}`,
     'END:VEVENT',
     'END:VCALENDAR',
   ].join('\r\n')
@@ -48,7 +49,7 @@ function downloadIcs() {
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
-  a.download = 'kareem-and-hana-wedding.ics'
+  a.download = `${COUPLE.groomName}-and-${COUPLE.brideName.replace(/\s+/g, '-')}-wedding.ics`
   document.body.appendChild(a)
   a.click()
   a.remove()

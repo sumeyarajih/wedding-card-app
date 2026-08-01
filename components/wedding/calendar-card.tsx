@@ -9,8 +9,8 @@ export function CalendarCard() {
                 {/* ── Binding rings ── */}
                 <div className="absolute -top-3.5 left-0 right-0 z-10 flex justify-around px-8">
                     {[0, 1].map((i) => (
-                        <div key={i} className="h-7 w-7 overflow-hidden rounded-full border-[3px] border-gold/80 bg-card shadow-[0_2px_8px_rgba(0,0,0,0.5)]">
-                            <div className="h-full w-full rounded-full border-[2px] border-gold/40 bg-gradient-to-br from-gold/30 to-gold/10" />
+                        <div key={i} className="h-7 w-7 overflow-hidden rounded-full border-[3px] border-gold bg-card shadow-[0_2px_8px_rgba(0,0,0,0.5)]">
+                            <div className="h-full w-full rounded-full border-[2px] border-gold/40 bg-gradient-to-br from-gold/40 to-background" />
                         </div>
                     ))}
                 </div>
@@ -21,15 +21,15 @@ export function CalendarCard() {
                     <div
                         className="px-3 pt-5 pb-2 text-center"
                         style={{
-                            background: 'linear-gradient(160deg, oklch(0.55 0.13 85) 0%, oklch(0.38 0.10 80) 100%)',
+                            background: 'linear-gradient(160deg, var(--gold), var(--gold-soft))',
                         }}
                     >
                         <div className="flex items-center justify-between">
-                            <span className="font-sans text-[0.55rem] tracking-[0.2em] text-background/80 uppercase">ديسمبر</span>
+                            <span className="font-sans text-[0.55rem] tracking-[0.2em] text-background/80 uppercase">أغسطس</span>
                             <span className="font-sans text-[0.55rem] tracking-[0.2em] text-background/80 uppercase">٢٠٢٦</span>
                         </div>
                         <div className="mt-0.5 font-sans text-[0.5rem] tracking-widest text-background/60 uppercase">
-                            December 2026
+                            August 2026
                         </div>
                     </div>
 
@@ -39,13 +39,13 @@ export function CalendarCard() {
                         <div
                             className="font-serif text-7xl font-bold leading-none"
                             style={{
-                                background: 'linear-gradient(160deg, oklch(0.55 0.14 82), oklch(0.40 0.10 78))',
+                                background: 'linear-gradient(160deg, var(--gold), var(--foreground))',
                                 WebkitBackgroundClip: 'text',
                                 backgroundClip: 'text',
                                 color: 'transparent',
                             }}
                         >
-                            30
+                            8
                         </div>
 
                         {/* Divider */}
@@ -55,24 +55,19 @@ export function CalendarCard() {
                         <p
                             className="font-arabic text-sm font-semibold"
                             dir="rtl"
-                            style={{
-                                color: 'oklch(0.48 0.12 82)',
-                            }}
+                            style={{ color: 'var(--foreground)' }}
                         >
-                            الأربعاء
+                            السبت
                         </p>
-                        <p
-                            className="mt-1 font-sans text-[0.6rem] tracking-[0.2em] uppercase"
-                            style={{ color: 'oklch(0.58 0.10 80)' }}
-                        >
-                            Wednesday
+                        <p className="mt-1 font-sans text-[0.6rem] tracking-[0.2em] uppercase text-muted-foreground">
+                            Saturday
                         </p>
 
                         {/* Time */}
                         <div className="mt-2 flex items-center justify-center gap-1">
                             <span
                                 className="font-sans text-[0.65rem] font-semibold"
-                                style={{ color: 'oklch(0.48 0.12 82)' }}
+                                style={{ color: 'var(--foreground)' }}
                             >
                                 PM 4:49
                             </span>
