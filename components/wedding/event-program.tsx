@@ -5,9 +5,10 @@ import { motion, useScroll, useTransform, MotionValue } from 'framer-motion'
 
 // Unified theme using CSS variables
 const THEME = {
-    bg: 'oklch(var(--card, 0.22 0.006 60) / 0.5)',
-    gold: 'oklch(0.78 0.13 85)',
-    foreground: 'oklch(0.96 0.01 90)',
+    bg: 'var(--background)',
+    gold: 'var(--gold)',
+    goldSoft: 'var(--gold-soft)',
+    foreground: 'var(--foreground)',
 }
 
 interface ScheduleItem {
@@ -179,14 +180,14 @@ export function EventProgram({ schedule = DEFAULT_SCHEDULE }: EventProgramProps)
                         {/* Underlying dull gold track line spanning exact bounds from center of dot 0 to center of dot N */}
                         <div
                             className="absolute top-[35px] bottom-[35px] left-[96px] w-[2px] z-0"
-                            style={{ backgroundColor: `color-mix(in oklch, ${THEME.gold} 20%, transparent)` }}
+                            style={{ backgroundColor: 'oklch(0.7 0.08 55 / 15%)' }}
                         />
 
                         {/* The dynamic SCROLL-DRIVEN growing GOLD line container */}
                         <div className="absolute top-[35px] bottom-[35px] left-[96px] w-[2px] z-10">
                             <motion.div
                                 className="absolute top-0 w-full"
-                                style={{ backgroundColor: THEME.gold, height: lineHeight }}
+                                style={{ backgroundColor: THEME.goldSoft, height: lineHeight }}
                             >
                                 {/* 
                   Traveling dot anchored perfectly to the bottom edge *of the fill*.
@@ -196,8 +197,8 @@ export function EventProgram({ schedule = DEFAULT_SCHEDULE }: EventProgramProps)
                                 <motion.div
                                     className="absolute -bottom-1.5 -left-[6px] w-3.5 h-3.5 rounded-full z-20 animate-pulse"
                                     style={{
-                                        backgroundColor: THEME.gold,
-                                        boxShadow: `0 0 15px 6px ${THEME.gold}80`,
+                                        backgroundColor: THEME.goldSoft,
+                                        boxShadow: `0 0 15px 6px oklch(0.7 0.08 55 / 45%)`,
                                         opacity: dotOpacity
                                     }}
                                 />

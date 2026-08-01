@@ -1,7 +1,21 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import Image from 'next/image'
+import { useEffect, useRef } from 'react'
+import { COUPLE, WEDDING_DATE } from '@/lib/wedding.config'
+
+export function Hero({ isPlaying, onVideoEnd }: { isPlaying: boolean; onVideoEnd?: () => void }) {
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.play().catch(console.error)
+      } else {
+        videoRef.current.pause()
+      }
+    }
+  }, [isPlaying])
 
 interface HeroProps {
   hostNames?: string
@@ -25,19 +39,23 @@ export function Hero({
   const [firstName, secondName] = parseHostNames(hostNames)
   return (
     <section className="relative flex min-h-[92vh] flex-col items-center justify-end overflow-hidden pb-16 text-center lg:min-h-screen lg:pb-24">
-      <Image
-        src="/images/hero-gown.png"
-        alt="Elegant bridal gown with a flowing veil"
-        fill
-        priority
-        className="object-cover"
+      {/* Full-section video background */}
+      <video
+        ref={videoRef}
+        muted
+        playsInline
+        onEnded={onVideoEnd}
+        className="absolute inset-0 h-full w-full object-cover"
+        src="/hero4 section.mp4"
       />
+
+      {/* Light gradient overlay so white/brown theme flows seamlessly into the page background */}
       <div
         aria-hidden="true"
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(180deg, oklch(0.15 0.005 60 / 55%) 0%, oklch(0.15 0.005 60 / 35%) 40%, oklch(0.15 0.005 60 / 92%) 100%)',
+            'linear-gradient(180deg, transparent 0%, transparent 70%, oklch(var(--background) / 60%) 90%, oklch(var(--background) / 100%) 100%)',
         }}
       />
 

@@ -15,7 +15,7 @@ import { GoldParticles } from '@/components/wedding/gold-particles'
 export function PageBackground({ renderRain = true }: { renderRain?: boolean }) {
   return (
     <>
-      {/* ── Warm dark scenery ─────────────────────────────────────────── */}
+      {/* ── Light white scenery ─────────────────────────────────────────── */}
       <div
         aria-hidden="true"
         style={{
@@ -25,21 +25,21 @@ export function PageBackground({ renderRain = true }: { renderRain?: boolean }) 
           background: `
             radial-gradient(
               ellipse 120% 80% at 50% -10%,
-              oklch(0.30 0.06 80 / 60%) 0%,
+              oklch(0.96 0.02 70 / 80%) 0%,
               transparent 65%
             ),
             radial-gradient(
               ellipse 80% 60% at 80% 100%,
-              oklch(0.25 0.05 75 / 40%) 0%,
+              oklch(0.95 0.04 65 / 50%) 0%,
               transparent 60%
             ),
-            oklch(0.14 0.006 60)
+            oklch(0.98 0.01 70)
           `,
         }}
       />
 
-      {/* ── Continuous tiny golden rain beads ─────────────────────────── */}
-      {renderRain && <GoldParticles count={65} />}
+      {/* ── Continuous tiny white gold rain beads ─────────────────────────── */}
+      {renderRain && <GoldParticles count={25} />}
     </>
   )
 }

@@ -30,7 +30,7 @@ export function GoldParticles({ count = 60 }: { count?: number }) {
       Array.from({ length: count }).map((_, i) => ({
         id: i,
         left: `${(Math.random() * 98 + 1).toFixed(2)}%`,
-        size: 1.6 + Math.random() * 2.8,
+        size: 0.8 + Math.random() * 1.5,
         fallDur: 5 + Math.random() * 9,
         fallDelay: -(Math.random() * 14),   // already mid-fall on mount
         glowDur: 0.8 + Math.random() * 1.6,
@@ -55,12 +55,13 @@ export function GoldParticles({ count = 60 }: { count?: number }) {
           key={p.id}
           style={{
             position: 'absolute',
-            top: 0,
+            top: '-5px',
             left: p.left,
             width: `${p.size}px`,
-            height: `${(p.size * 2.2).toFixed(1)}px`,
+            height: `${(p.size * 2.5).toFixed(1)}px`,
             borderRadius: '50% 50% 55% 55%',
-            background: 'oklch(0.80 0.13 85)',
+            background: 'oklch(0.7 0.08 55)',
+            boxShadow: '0 0 3px oklch(0.7 0.08 55 / 40%)',
             // rain-fall controls Y position only
             animationName: 'rain-fall, gold-glow',
             animationDuration: `${p.fallDur}s, ${p.glowDur}s`,

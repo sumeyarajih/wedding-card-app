@@ -4,6 +4,7 @@ import { CalendarHeart } from 'lucide-react'
 import { forwardRef, useEffect, useState } from 'react'
 import { Reveal } from './reveal'
 import { CalendarCard } from './calendar-card'
+import { COUPLE, VENUE } from '@/lib/wedding.config'
 
 interface CountdownProps {
   targetDate?: string

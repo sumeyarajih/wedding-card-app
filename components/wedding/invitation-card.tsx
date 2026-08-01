@@ -70,16 +70,6 @@ export const InvitationCard = forwardRef<HTMLElement, InvitationCardProps>(funct
             <p className="mt-1 font-sans text-sm text-muted-foreground">
               {venueAddress}
             </p>
-
-            <a
-              href={MAPS_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-6 inline-flex items-center gap-2 rounded-full border border-gold/50 bg-gold/10 px-6 py-3 font-sans text-sm tracking-wide text-gold transition-colors hover:bg-gold hover:text-background"
-            >
-              <MapPin className="h-4 w-4" />
-              Open in Google Maps
-            </a>
           </div>
         </div>
       </Reveal>
