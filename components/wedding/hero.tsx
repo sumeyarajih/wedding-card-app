@@ -1,8 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { useEffect, useRef } from 'react'
-import { COUPLE, WEDDING_DATE } from '@/lib/wedding.config'
 
 export function Hero({ isPlaying, onVideoEnd }: { isPlaying: boolean; onVideoEnd?: () => void }) {
   const videoRef = useRef<HTMLVideoElement>(null)

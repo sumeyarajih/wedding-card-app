@@ -4,15 +4,15 @@ import { CalendarHeart } from 'lucide-react'
 import { forwardRef, useEffect, useState } from 'react'
 import { Reveal } from './reveal'
 import { CalendarCard } from './calendar-card'
-import { COUPLE, VENUE } from '@/lib/wedding.config'
+import { COUPLE, VENUE, WEDDING_DATE } from '@/lib/wedding.config'
 
-const TARGET = new Date('2026-08-08T16:49:00+03:00').getTime()
+const TARGET = new Date(WEDDING_DATE.iso).getTime()
 
 const GCAL_URL =
   'https://calendar.google.com/calendar/render?action=TEMPLATE' +
   '&text=' +
   encodeURIComponent(`Wedding of ${COUPLE.displayName}`) +
-  '&dates=20260808T134900Z/20260808T190000Z' +
+  '&dates=20260807T230000Z/20260808T100000Z' +
   '&details=' +
   encodeURIComponent(`Join us to celebrate the wedding of ${COUPLE.displayName}.`) +
   '&location=' +
@@ -36,8 +36,8 @@ function downloadIcs() {
     'BEGIN:VEVENT',
     'UID:wedding-invitation-2026-08',
     'DTSTAMP:20260101T000000Z',
-    'DTSTART:20260808T134900Z',
-    'DTEND:20260808T190000Z',
+    'DTSTART:20260807T230000Z',
+    'DTEND:20260808T100000Z',
     `SUMMARY:Wedding of ${COUPLE.displayName}`,
     `DESCRIPTION:Join us to celebrate the wedding of ${COUPLE.displayName}.`,
     `LOCATION:${VENUE.address.replace(/,/g, '\\,')}`,

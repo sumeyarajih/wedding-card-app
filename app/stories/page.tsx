@@ -1,49 +1,11 @@
 'use client'
 
 import React from 'react'
-import Image from 'next/image'
 import { BottomNav } from '@/components/wedding/bottom-nav'
 import { PageBackground } from '@/components/wedding/page-background'
 import { Reveal } from '@/components/wedding/reveal'
-import { BookOpen, Sparkles, Heart } from 'lucide-react'
-
-type StoryEvent = {
-    year: string
-    title: string
-    description: string
-    arabicTitle: string
-}
-
-const STORIES: StoryEvent[] = [
-    {
-        year: '2023',
-        title: 'The First Encounter',
-        arabicTitle: 'اللقاء الأول',
-        description:
-            'Under the beautiful skies of Riyadh, our paths crossed. A simple introduction sparkled an endless conversation filled with shared laughter, core values, and mutual dreams.',
-    },
-    {
-        year: '2024',
-        title: 'The Shared Dreams',
-        arabicTitle: 'رؤية مشتركة',
-        description:
-            'Over countless discussions and family gatherings, Kareem & Hana realized they wanted to craft a life of commitment together. Their love flourished through support and deep friendship.',
-    },
-    {
-        year: '2025',
-        title: 'The Golden Engagement',
-        arabicTitle: 'الخطوبة المباركة',
-        description:
-            'With the blessings of our beloved families, we promised our hearts to another in an intimate ceremony, sealing our commitment and beginning the countdown to our big night.',
-    },
-    {
-        year: '2026',
-        title: 'The Marriage Covenant',
-        arabicTitle: 'الميثاق الغليظ',
-        description:
-            'Celebrating the start of forever on December 30, 2026 at The Ritz-Carlton, Riyadh. Surrounded by the warmth of our relatives and friends, we embark on this sacred journey.',
-    },
-]
+import { BookOpen, Heart } from 'lucide-react'
+import { LOVE_STORY, COUPLE } from '@/lib/wedding.config'
 
 export default function StoriesPage() {
     return (
@@ -60,39 +22,32 @@ export default function StoriesPage() {
                             </span>
                             <h2 className="mt-2 font-serif text-3xl text-gold">The Love Story</h2>
                             <p className="mt-3 font-sans text-xs text-muted-foreground max-w-sm mx-auto leading-relaxed">
-                                Take a glimpse into the milestones and special moments that brought Kareem & Hana to this beautiful wedding union.
+                                A glimpse into the beautiful journey that brought {COUPLE.groomName} &amp; {COUPLE.brideName} together.
                             </p>
                         </div>
                     </Reveal>
 
-                    {/* Timeline Layout */}
-                    <div className="relative mx-auto max-w-lg border-l border-gold/20 pl-6 space-y-10 py-4 font-sans">
-                        {STORIES.map((story, index) => (
+                    {/* Story Cards */}
+                    <div className="relative mx-auto max-w-lg space-y-6 py-4">
+                        {LOVE_STORY.map((story) => (
                             <Reveal key={story.title}>
-                                <div className="relative">
-                                    {/* Circle Indicator */}
-                                    <span className="absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-gold shadow-[0_0_10px_rgba(203,171,94,0.6)]">
-                                        <Heart className="h-2 w-2 text-background" />
-                                    </span>
-
-                                    {/* Card content */}
-                                    <div className="group rounded-[1.5rem] border border-gold/15 bg-card/50 p-5 shadow-lg transition-all duration-300 hover:border-gold/30 hover:bg-card/75">
-                                        <div className="flex items-center justify-between gap-4">
-                                            <span className="font-serif text-lg font-bold text-gold">{story.year}</span>
-                                            <span className="font-arabic text-sm text-gold/60">{story.arabicTitle}</span>
+                                <div className="group rounded-[1.5rem] border border-gold/20 bg-card/60 p-6 shadow-xl transition-all duration-300 hover:border-gold/40 hover:bg-card/80">
+                                    {/* Arabic title top-right */}
+                                    <div className="flex items-start justify-between gap-4 mb-4">
+                                        <div className="flex items-center gap-2">
+                                            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gold/20 shadow-[0_0_10px_rgba(203,171,94,0.3)]">
+                                                <Heart className="h-4 w-4 text-gold" />
+                                            </span>
+                                            <h3 className="font-serif text-lg font-semibold text-gold">{story.title}</h3>
                                         </div>
-
-                                        <h3 className="mt-2 font-serif text-base text-foreground font-semibold flex items-center gap-1.5">
-                                            {story.title}
-                                            {index === STORIES.length - 1 && (
-                                                <Sparkles className="h-4 w-4 text-gold animate-bounce" />
-                                            )}
-                                        </h3>
-
-                                        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                                            {story.description}
-                                        </p>
+                                        <span className="font-arabic text-base text-gold/60 shrink-0" dir="rtl">
+                                            {story.titleAr}
+                                        </span>
                                     </div>
+
+                                    <p className="font-sans text-sm leading-relaxed text-muted-foreground">
+                                        {story.description}
+                                    </p>
                                 </div>
                             </Reveal>
                         ))}

@@ -7,7 +7,7 @@ import { BottomNav } from '@/components/wedding/bottom-nav'
 import { PageBackground } from '@/components/wedding/page-background'
 import { Reveal } from '@/components/wedding/reveal'
 import { Camera, Heart, ZoomIn, Calendar } from 'lucide-react'
-import { CoupleSlider } from '@/components/wedding/couple-slider'
+
 
 type PhotoItem = {
     id: string
@@ -94,9 +94,6 @@ export default function GalleryPage() {
                             </p>
                         </div>
                     </Reveal>
-
-                    {/* Couple horizontal slider */}
-                    <CoupleSlider />
 
                     {/* Grid Layout */}
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

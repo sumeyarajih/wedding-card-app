@@ -7,12 +7,6 @@ import { Reveal } from './reveal'
 
 const RULES = [
   {
-    icon: CameraOff,
-    title: 'No Photography Allowed',
-    detail:
-      'To preserve the intimacy of the ceremony, guests are kindly asked to refrain from taking photos or videos. Our professional team will capture every moment.',
-  },
-  {
     icon: Clock,
     title: 'Please Arrive On Time',
     detail:

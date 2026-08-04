@@ -69,7 +69,7 @@ export function CalendarCard() {
                                 className="font-sans text-[0.65rem] font-semibold"
                                 style={{ color: 'var(--foreground)' }}
                             >
-                                PM 4:49
+                                2:00 AM
                             </span>
                         </div>
                     </div>
