@@ -1,29 +1,15 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useEffect, useRef } from 'react'
-import { COUPLE, WEDDING_DATE } from '@/lib/wedding.config'
-
-export function Hero({ isPlaying, onVideoEnd }: { isPlaying: boolean; onVideoEnd?: () => void }) {
-  const videoRef = useRef<HTMLVideoElement>(null)
-
-  useEffect(() => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.play().catch(console.error)
-      } else {
-        videoRef.current.pause()
-      }
-    }
-  }, [isPlaying])
 
 interface HeroProps {
   hostNames?: string
   dateStr?: string
   timeStr?: string
+  videoUrl?: string | null
 }
 
-const DEFAULT_HOST_NAMES = 'Kareem & Hana'
+const DEFAULT_HOST_NAMES = 'Mohammed Ali & Sebat Mohammed'
 
 function parseHostNames(hostNames: string): [string, string] {
   const parts = hostNames.split('&').map((s) => s.trim())
@@ -35,29 +21,28 @@ export function Hero({
   hostNames = DEFAULT_HOST_NAMES,
   dateStr = 'Wednesday, December 30, 2026',
   timeStr = 'at 4:49 PM',
+  videoUrl,
 }: HeroProps) {
   const [firstName, secondName] = parseHostNames(hostNames)
   return (
-    <section className="relative flex min-h-[92vh] flex-col items-center justify-end overflow-hidden pb-16 text-center lg:min-h-screen lg:pb-24">
-      {/* Full-section video background */}
-      <video
-        ref={videoRef}
-        muted
-        playsInline
-        onEnded={onVideoEnd}
-        className="absolute inset-0 h-full w-full object-cover"
-        src="/hero4 section.mp4"
-      />
-
-      {/* Light gradient overlay so white/brown theme flows seamlessly into the page background */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0"
-        style={{
-          background:
-            'linear-gradient(180deg, transparent 0%, transparent 70%, oklch(var(--background) / 60%) 90%, oklch(var(--background) / 100%) 100%)',
-        }}
-      />
+    <section className="relative flex flex-col items-center pb-16 text-center lg:pb-24">
+      {/* Video plays in its own block, immediately on mount — visible faintly
+          through the splash screen's translucent curtains before the guest
+          taps "Open"; the curtains simply slide away to reveal it already in
+          motion. Sits ABOVE the names, in its own space, never overlapping
+          them. Only rendered when this event actually has a video. */}
+      {videoUrl && (
+        <div className="relative mb-10 w-full max-w-md overflow-hidden rounded-b-[2.5rem] shadow-2xl lg:max-w-xl lg:rounded-[2.5rem]">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="aspect-[9/16] w-full object-cover lg:aspect-video"
+            src={videoUrl}
+          />
+        </div>
+      )}
 
       <motion.div
         className="relative z-10 flex flex-col items-center px-6"
