@@ -11,7 +11,7 @@ interface InvitationCardProps {
   mapQuery?: string
 }
 
-const DEFAULT_HOST = 'Kareem & Hana'
+const DEFAULT_HOST = 'Mohammed Ali & Sebat Mohammed'
 const DEFAULT_VENUE = 'The Ritz-Carlton, Riyadh'
 const DEFAULT_ADDRESS = 'Al Hada District, Riyadh, Saudi Arabia'
 const DEFAULT_MAP_QUERY = 'The+Ritz-Carlton+Riyadh'
