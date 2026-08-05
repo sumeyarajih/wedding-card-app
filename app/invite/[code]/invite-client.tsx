@@ -130,6 +130,7 @@ export function InviteClient({ data }: Props) {
               hostNames={event.host_names}
               dateStr={dateStr}
               timeStr={timeStr}
+              videoUrl={event.video_url}
             />
           </div>
 
