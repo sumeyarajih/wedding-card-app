@@ -23,7 +23,7 @@ interface BottomNavProps {
   hostNames?: string
 }
 
-const DEFAULT_HOST_NAMES = 'Kareem & Hana'
+const DEFAULT_HOST_NAMES = 'Mohammed Ali & Sebat Mohammed'
 
 export function BottomNav({ code, tier, hostNames = DEFAULT_HOST_NAMES }: BottomNavProps) {
   const pathname = usePathname()
