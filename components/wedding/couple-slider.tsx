@@ -2,6 +2,7 @@
 
 import { useRef } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { COUPLE } from '@/lib/wedding.config'
 
 type SlideItem = {
     id: string
@@ -14,14 +15,14 @@ const slides: SlideItem[] = [
     {
         id: 'groom',
         src: '/placeholder-user.jpg',
-        label: 'Kareem',
-        subtitle: 'كريم',
+        label: COUPLE.groomName,
+        subtitle: COUPLE.groomArabic,
     },
     {
         id: 'bride',
         src: '/images/hero-gown.png',
-        label: 'Hana',
-        subtitle: 'هناء',
+        label: COUPLE.brideName,
+        subtitle: COUPLE.brideArabic,
     },
     {
         id: 'together',
