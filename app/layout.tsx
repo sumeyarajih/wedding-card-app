@@ -24,9 +24,9 @@ const amiri = Amiri({
 })
 
 export const metadata: Metadata = {
-  title: 'Kareem & Hana — The Wedding',
+  title: 'Mohammed Ali & Sebat Mohammed — The Wedding',
   description:
-    'You are cordially invited to celebrate the wedding of Kareem & Hana. Wednesday, December 30, 2026 at The Ritz-Carlton, Riyadh.',
+    'You are cordially invited to celebrate the wedding of Mohammed Ali & Sebat Mohammed. Wednesday, December 30, 2026 at The Ritz-Carlton, Riyadh.',
   generator: 'v0.app',
 }
 
