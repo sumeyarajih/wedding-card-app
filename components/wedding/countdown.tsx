@@ -14,7 +14,7 @@ interface CountdownProps {
 }
 
 const DEFAULT_TARGET = '2026-12-30T16:49:00+03:00'
-const DEFAULT_HOST = 'Kareem & Hana'
+const DEFAULT_HOST = 'Mohammed Ali & Sebat Mohammed'
 const DEFAULT_VENUE = 'The Ritz-Carlton, Riyadh'
 const DEFAULT_ADDRESS = 'Al Hada District, Riyadh, Saudi Arabia'
 
@@ -155,3 +155,76 @@ export const Countdown = forwardRef<HTMLElement, CountdownProps>(function Countd
     </section>
   )
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
