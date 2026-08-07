@@ -15,6 +15,7 @@ import { GoldParticles } from '@/components/wedding/gold-particles'
 import { EntryPass } from '@/components/wedding/entry-pass'
 import { useMusic } from '@/lib/music-context'
 import { EventProgram } from '@/components/wedding/event-program'
+import { VENUE, WEDDING_DATE } from '@/lib/wedding.config'
 
 interface Props {
   data: InviteResponse
@@ -76,7 +77,15 @@ export function InviteClient({ data }: Props) {
   function handleOpen() {
     setSplashOpen(false)
     playMusic()
-    startAutoScrollPresentation()
+
+    // Immediately scroll to very top so hero video is visible
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+
+    // If no video, start auto-scroll immediately
+    if (!event.video_url) {
+      startAutoScrollPresentation()
+    }
+    // If there IS a video, auto-scroll will be triggered by onVideoEnded
 
     const cancel = () => {
       stopAutoScroll()
@@ -95,19 +104,14 @@ export function InviteClient({ data }: Props) {
     }, 1950)
   }
 
-  // Format the date for display
-  const eventDate = new Date(event.event_date)
-  const dateStr = eventDate.toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-  const timeStr = eventDate.toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-  })
+  function handleVideoEnded() {
+    // Video finished — now slowly auto-scroll down through the rest of the page
+    startAutoScrollPresentation()
+  }
+
+  // Use config-driven date instead of dynamic DB date
+  const dateStr = WEDDING_DATE.longEnglish
+  const timeStr = WEDDING_DATE.timeEnglish
 
   return (
     <>
@@ -124,13 +128,14 @@ export function InviteClient({ data }: Props) {
       <main className="relative mx-auto min-h-screen max-w-md overflow-hidden bg-background shadow-[0_0_80px_rgba(0,0,0,0.6)] lg:max-w-6xl">
         <GoldParticles count={16} />
 
-        <div className="relative pb-28 pt-16 md:pt-24">
+        <div className="relative pb-28 pt-4 md:pt-8">
           <div ref={heroRef}>
             <Hero
               hostNames={event.host_names}
               dateStr={dateStr}
               timeStr={timeStr}
               videoUrl={event.video_url}
+              onVideoEnded={handleVideoEnded}
             />
           </div>
 
@@ -144,15 +149,15 @@ export function InviteClient({ data }: Props) {
             />
             <Countdown
               ref={countdownRef}
-              targetDate={event.event_date}
+              targetDate={WEDDING_DATE.iso}
               hostNames={event.host_names}
-              venueName={event.venue_name}
-              venueAddress={event.venue_address}
+              venueName={event.venue_name || VENUE.nameEnglish}
+              venueAddress={event.venue_address || VENUE.address}
             />
           </div>
 
           <div className="mx-auto lg:grid lg:max-w-5xl lg:grid-cols-2 lg:items-start lg:gap-8">
-<EventProgram />
+            <EventProgram />
             <div ref={rulesRef}>
               <Rules />
             </div>
@@ -160,9 +165,10 @@ export function InviteClient({ data }: Props) {
 
           <MapSection
             ref={mapRef}
-            venueName={event.venue_name}
-            venueAddress={event.venue_address}
+            venueName={event.venue_name || VENUE.nameEnglish}
+            venueAddress={event.venue_address || VENUE.address}
             mapQuery={event.map_query}
+            directionsUrl={VENUE.mapsUrl}
           />
 
           <Rsvp
@@ -171,7 +177,7 @@ export function InviteClient({ data }: Props) {
             guestName={guest.guest_name}
           />
 
-            {/* Entry Pass for premium/royal */}
+          {/* Entry Pass for premium/royal */}
           {(event.tier === 'premium' || event.tier === 'royal') && (
             <EntryPass code={guest.code} />
           )}
@@ -180,7 +186,7 @@ export function InviteClient({ data }: Props) {
             <div className="mx-auto mb-4 h-px w-16 bg-gold/40" />
             <p className="font-serif text-2xl text-gold">{event.host_names}</p>
             <p className="mt-2 font-sans text-xs tracking-[0.3em] text-muted-foreground uppercase">
-              {dateStr} &middot; {event.venue_name}
+              {dateStr} &middot; {event.venue_name || VENUE.nameEnglish}
             </p>
           </footer>
         </div>

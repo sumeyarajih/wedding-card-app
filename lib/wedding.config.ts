@@ -18,12 +18,12 @@ export const COUPLE = {
 // ─── Date & Time ──────────────────────────────────────────────────────────
 export const WEDDING_DATE = {
     /** ISO 8601 datetime string */
-    iso: '2026-08-08T16:49:00+03:00',
+    iso: '2026-08-08T02:00:00+03:00',
     /** Displayed in invitation card / hero etc. */
     longEnglish: 'Saturday, August 8, 2026',
-    timeEnglish: 'at 4:49 PM',
+    timeEnglish: 'at 2:00 AM',
     longArabic: 'السبت ٨ أغسطس ٢٠٢٦',
-    timeArabic: '٤:٤٩ مساءً',
+    timeArabic: '٢:٠٠ صباحًا',
     /** For the physical calendar card */
     dayNumber: '8',
     dayNameAr: 'السبت',
@@ -36,13 +36,13 @@ export const WEDDING_DATE = {
 
 // ─── Venue ────────────────────────────────────────────────────────────────
 export const VENUE = {
-    nameEnglish: 'The Ritz-Carlton, Riyadh',
-    nameArabic: 'فندق ريتز كارلتون، الرياض',
-    address: 'Al Hada District, Riyadh, Saudi Arabia',
+    nameEnglish: 'Dire Dawa',
+    nameArabic: 'ديرة داوا',
+    address: 'around Eftu hospital, congo meda, memeria',
     city: 'Dire Dawa, Ethiopia',
-    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=The+Ritz-Carlton+Riyadh',
+    mapsUrl: 'https://maps.app.goo.gl/jqf2VDmq5hCKjgJz6',
     embedUrl:
-        'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3624.978252285514!2d46.62680457618037!3d24.693444451792618!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e2f1cd8f8dc1c7b%3A0x6b8bc22db0c0b388!2sThe%20Ritz-Carlton%2C%20Riyadh!5e0!3m2!1sen!2ssa!4v1700000000000!5m2!1sen!2ssa',
+        'https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3940.8!2d41.8661!3d9.5980!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zOcKwMzUnNTIuOCJOIDQxwrA1MScxOS42IkU!5e0!3m2!1sen!2set!4v1700000000000!5m2!1sen!2set',
 } as const
 
 // ─── Images ───────────────────────────────────────────────────────────────
@@ -50,8 +50,8 @@ export const IMAGES = {
     heroBg: '/images/hero-gown.png',
     desktopBg: '/images/riyadh-bg.png',
     groomPortrait: '/placeholder-user.jpg',
-    bridePortrait: '/images/hero-gown.png',
-    couplePhoto: '/placeholder.jpg',
+    bridePortrait: '/bride.jpg',
+    couplePhoto: '/groom and bride.jpg',
 } as const
 
 // ─── Audio ────────────────────────────────────────────────────────────────
@@ -75,41 +75,19 @@ export const CONTACTS = [
 
 // ─── Event Schedule ───────────────────────────────────────────────────────
 export const SCHEDULE = [
-    { time: '4:30 PM', label: 'Guest Arrival', labelAr: 'استقبال الضيوف' },
-    { time: '4:49 PM', label: 'Ceremony Begins', labelAr: 'بداية حفل الزفاف' },
-    { time: '6:00 PM', label: 'Wedding Dinner', labelAr: 'العشاء' },
-    { time: '8:00 PM', label: 'Live Entertainment', labelAr: 'الترفيه الحي' },
-    { time: '10:00 PM', label: 'Cake Cutting', labelAr: 'تقطيع الكعكة' },
+    { time: '2:00 AM', label: 'Guest Arrival', labelAr: 'استقبال الضيوف' },
+    { time: '3:00 AM', label: 'Ceremony Begins', labelAr: 'بداية حفل الزفاف' },
+    { time: '4:00 AM', label: 'Nikkah', labelAr: 'عقد النكاح' },
+    { time: '5:30 AM', label: 'Zeken kerebu', labelAr: 'زكن كريبو' },
+    { time: '1:00 PM', label: 'Anker mahteb', labelAr: 'أنكر محتب' },
 ] as const
 
 // ─── Love Story Timeline (Stories Page) ───────────────────────────────────
 export const LOVE_STORY = [
     {
-        year: '2023',
-        title: 'The First Encounter',
-        titleAr: 'اللقاء الأول',
+        title: 'Our Journey',
+        titleAr: 'رحلتنا',
         description:
-            'Under the beautiful skies of Riyadh, our paths crossed. A simple introduction sparked an endless conversation filled with shared laughter, values, and mutual dreams.',
+            'From a meaningful first meeting to a shared commitment, we are blessed to begin our lifelong journey together surrounded by family and loved ones.',
     },
-    {
-        year: '2024',
-        title: 'The Shared Dreams',
-        titleAr: 'رؤية مشتركة',
-        description:
-            'Over countless discussions and family gatherings, they realized they wanted to craft a life of commitment together. Their love flourished through support and deep friendship.',
-    },
-    {
-        year: '2025',
-        title: 'The Golden Engagement',
-        titleAr: 'الخطوبة المباركة',
-        description:
-            'With the blessings of their beloved families, they promised their hearts in an intimate ceremony, sealing commitment and beginning the countdown to their big night.',
-    },
-    {
-        year: '2026',
-        title: 'The Marriage Covenant',
-        titleAr: 'الميثاق الغليظ',
-        description:
-            'Celebrating the start of forever on August 8, 2026. Surrounded by the warmth of relatives and friends, they embark on this sacred journey.',
-    },
-] as const
+] as const;

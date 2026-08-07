@@ -1,12 +1,15 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useRef } from 'react'
+import { WEDDING_DATE } from '@/lib/wedding.config'
 
 interface HeroProps {
   hostNames?: string
   dateStr?: string
   timeStr?: string
   videoUrl?: string | null
+  onVideoEnded?: () => void
 }
 
 const DEFAULT_HOST_NAMES = 'Mohammed Ali & Sebat Mohammed'
@@ -19,27 +22,30 @@ function parseHostNames(hostNames: string): [string, string] {
 
 export function Hero({
   hostNames = DEFAULT_HOST_NAMES,
-  dateStr = 'Wednesday, December 30, 2026',
-  timeStr = 'at 4:49 PM',
+  dateStr = WEDDING_DATE.longEnglish,
+  timeStr = WEDDING_DATE.timeEnglish,
   videoUrl,
+  onVideoEnded,
 }: HeroProps) {
   const [firstName, secondName] = parseHostNames(hostNames)
+  const videoRef = useRef<HTMLVideoElement>(null)
+
   return (
-    <section className="relative flex flex-col items-center pb-16 text-center lg:pb-24">
+    <section className="relative flex flex-col items-center pt-2 pb-10 text-center sm:pt-4 lg:pb-24">
       {/* Video plays in its own block, immediately on mount — visible faintly
           through the splash screen's translucent curtains before the guest
           taps "Open"; the curtains simply slide away to reveal it already in
-          motion. Sits ABOVE the names, in its own space, never overlapping
-          them. Only rendered when this event actually has a video. */}
+          motion. Only rendered when this event actually has a video. */}
       {videoUrl && (
-        <div className="relative mb-10 w-full max-w-md overflow-hidden rounded-b-[2.5rem] shadow-2xl lg:max-w-xl lg:rounded-[2.5rem]">
+        <div className="relative mb-8 w-full max-w-md overflow-hidden rounded-b-[2.5rem] shadow-2xl lg:max-w-xl lg:rounded-[2.5rem]">
           <video
+            ref={videoRef}
             autoPlay
             muted
-            loop
             playsInline
             className="aspect-[9/16] w-full object-cover lg:aspect-video"
             src={videoUrl}
+            onEnded={onVideoEnded}
           />
         </div>
       )}
@@ -76,7 +82,7 @@ export function Hero({
             className="mt-2 font-arabic text-lg text-gold/90"
             lang="ar"
           >
-            الأربعاء ٣٠ ديسمبر ٢٠٢٦ — الساعة ٤:٤٩ مساءً
+            {WEDDING_DATE.longArabic} — {WEDDING_DATE.timeArabic}
           </p>
         </div>
       </motion.div>

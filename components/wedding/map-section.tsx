@@ -3,28 +3,32 @@
 import React, { forwardRef } from 'react'
 import { MapPin, Navigation, Compass } from 'lucide-react'
 import { Reveal } from './reveal'
+import { VENUE } from '@/lib/wedding.config'
 
 interface MapSectionProps {
-  venueName?: string
-  venueAddress?: string
-  mapQuery?: string
+    venueName?: string
+    venueAddress?: string
+    mapQuery?: string
+    directionsUrl?: string
 }
 
-const DEFAULT_VENUE = 'The Ritz-Carlton, Riyadh'
-const DEFAULT_ADDRESS = 'Al Hada Area, Mekkah Road, Riyadh, Saudi Arabia'
-const DEFAULT_MAP_QUERY = 'The+Ritz-Carlton+Riyadh'
-
 export const MapSection = forwardRef<HTMLElement, MapSectionProps>(function MapSection(
-  {
-    venueName = DEFAULT_VENUE,
-    venueAddress = DEFAULT_ADDRESS,
-    mapQuery = DEFAULT_MAP_QUERY,
-  },
-  ref,
+    {
+        venueName = VENUE.nameEnglish,
+        venueAddress = VENUE.address,
+        mapQuery,
+        directionsUrl = VENUE.mapsUrl,
+    },
+    ref,
 ) {
-    const directionsUrl = `https://maps.google.com/maps?q=${mapQuery}`
-    // Keyless embed — no Google Maps API key needed, works for any venue query.
-    const embedUrl = `https://www.google.com/maps?q=${mapQuery}&output=embed`
+    // Build directions URL — prefer the passed prop, fall back to config
+    const finalDirectionsUrl = directionsUrl || VENUE.mapsUrl
+
+    // For embed: if we have a mapQuery (from DB), use the keyless query embed.
+    // Otherwise use the config embedUrl (Dire Dawa / Eftu hospital).
+    const embedUrl = mapQuery
+        ? `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`
+        : VENUE.embedUrl
 
     return (
         <section ref={ref} className="scroll-mt-20 px-5 py-8" id="venue-map">
@@ -32,7 +36,7 @@ export const MapSection = forwardRef<HTMLElement, MapSectionProps>(function MapS
                 <div className="mb-6 text-center">
                     <p className="font-sans text-[0.65rem] tracking-[0.4em] text-muted-foreground uppercase flex items-center justify-center gap-1.5">
                         <Compass className="h-3.5 w-3.5 text-gold animate-spin-slow" />
-                        Where & When
+                        Where &amp; When
                     </p>
                     <h2 className="mt-2 font-serif text-3xl text-gold">The Venue Map</h2>
                 </div>
@@ -52,7 +56,7 @@ export const MapSection = forwardRef<HTMLElement, MapSectionProps>(function MapS
                         </div>
 
                         <a
-                            href={directionsUrl}
+                            href={finalDirectionsUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center justify-center gap-2 rounded-full border border-gold/20 bg-gold/10 px-5 py-2.5 font-sans text-xs font-semibold text-gold transition-colors hover:bg-gold/20"
@@ -68,11 +72,11 @@ export const MapSection = forwardRef<HTMLElement, MapSectionProps>(function MapS
                             width="100%"
                             height="100%"
                             style={{ border: 0 }}
-                            allowFullScreen={false}
+                            allowFullScreen={true}
                             loading="lazy"
                             referrerPolicy="no-referrer-when-downgrade"
                             title={`${venueName} Venue Map`}
-                            className="absolute inset-0 h-full w-full opacity-80 filter invert-[90%] hue-rotate-[180deg] contrast-[85%]"
+                            className="absolute inset-0 h-full w-full"
                         />
                     </div>
                 </div>
