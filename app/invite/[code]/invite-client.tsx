@@ -171,6 +171,17 @@ export function InviteClient({ data }: Props) {
             directionsUrl={VENUE.mapsUrl}
           />
 
+          <section className="px-5 py-8 overflow-hidden">
+            <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+              <div className="snap-center shrink-0 w-[85vw] sm:w-[50vw] max-w-md rounded-[2rem] overflow-hidden border border-gold/25 shadow-xl bg-card">
+                <Image src="/groom and bride.jpg" alt="Groom and Bride" width={600} height={800} className="w-full h-[60vh] object-cover" />
+              </div>
+              <div className="snap-center shrink-0 w-[85vw] sm:w-[50vw] max-w-md rounded-[2rem] overflow-hidden border border-gold/25 shadow-xl bg-card">
+                <Image src="/bride.jpg" alt="Bride" width={600} height={800} className="w-full h-[60vh] object-cover" />
+              </div>
+            </div>
+          </section>
+
           <Rsvp
             ref={rsvpRef}
             code={guest.code}
