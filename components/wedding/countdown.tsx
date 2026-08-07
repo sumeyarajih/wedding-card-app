@@ -15,8 +15,8 @@ interface CountdownProps {
 
 const DEFAULT_TARGET = WEDDING_DATE.iso
 const DEFAULT_HOST = 'Mohammed Ali & Sebat Mohammed'
-const DEFAULT_VENUE = 'The Ritz-Carlton, Riyadh'
-const DEFAULT_ADDRESS = 'Al Hada District, Riyadh, Saudi Arabia'
+const DEFAULT_VENUE = VENUE.nameEnglish
+const DEFAULT_ADDRESS = VENUE.address
 
 function getRemaining(target: number) {
   const diff = Math.max(0, target - Date.now())

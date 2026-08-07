@@ -11,9 +11,11 @@ interface InvitationCardProps {
   mapQuery?: string
 }
 
+import { VENUE } from '@/lib/wedding.config'
+
 const DEFAULT_HOST = 'Mohammed Ali & Sebat Mohammed'
-const DEFAULT_VENUE = 'The Ritz-Carlton, Riyadh'
-const DEFAULT_ADDRESS = 'Al Hada District, Riyadh, Saudi Arabia'
+const DEFAULT_VENUE = VENUE.nameEnglish
+const DEFAULT_ADDRESS = VENUE.address
 const DEFAULT_MAP_QUERY = 'The+Ritz-Carlton+Riyadh'
 
 export const InvitationCard = forwardRef<HTMLElement, InvitationCardProps>(function InvitationCard(

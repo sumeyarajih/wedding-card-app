@@ -21,13 +21,14 @@ interface EventProgramProps {
     schedule?: ScheduleItem[]
 }
 
-const DEFAULT_SCHEDULE: ScheduleItem[] = [
-    { time: '4:30 PM', label: 'Guest Arrival', icon: '✨' },
-    { time: '4:49 PM', label: 'Ceremony Begins', icon: '💍' },
-    { time: '6:00 PM', label: 'Wedding Dinner', icon: '🍽️' },
-    { time: '8:00 PM', label: 'Live Entertainment', icon: '🎭' },
-    { time: '10:00 PM', label: 'Cake Cutting', icon: '📷' },
-]
+import { SCHEDULE } from '@/lib/wedding.config'
+const ICONS = ['✨', '💍', '🍽️', '🎭', '📷', '🎉', '🥂']
+
+const DEFAULT_SCHEDULE: ScheduleItem[] = SCHEDULE.map((s, i) => ({
+    time: s.time,
+    label: s.label,
+    icon: (s as any).icon || ICONS[i % ICONS.length],
+}))
 
 function TimelineRow({
     item,

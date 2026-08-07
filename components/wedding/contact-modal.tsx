@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { X, Phone, MessageSquare, Heart } from 'lucide-react'
+import { VENUE, CONTACTS } from '@/lib/wedding.config'
 
 interface ContactModalProps {
     isOpen: boolean
@@ -11,18 +12,7 @@ interface ContactModalProps {
 export function ContactModal({ isOpen, onClose }: ContactModalProps) {
     if (!isOpen) return null
 
-    const contacts = [
-        {
-            name: 'Fahad (Groom\'s Brother — RSVP Officer)',
-            phone: '+966 50 123 4567',
-            whatsapp: 'https://wa.me/966501234567',
-        },
-        {
-            name: 'Sarah (Bride\'s Sister — Family Coordinator)',
-            phone: '+966 55 987 6543',
-            whatsapp: 'https://wa.me/966559876543',
-        },
-    ]
+    const contacts = CONTACTS
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4 backdrop-blur-sm">
@@ -44,7 +34,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
                 {/* Info */}
                 <p className="mb-4 font-sans text-xs text-muted-foreground leading-relaxed">
-                    Need help registering your RSVP, sharing photos, or finding the Ritz-Carlton venue? Feel free to reach out to our event organizers:
+                    Need help registering your RSVP, sharing photos, or finding the {VENUE.nameEnglish} venue? Feel free to reach out to our event organizers:
                 </p>
 
                 {/* Contacts list */}

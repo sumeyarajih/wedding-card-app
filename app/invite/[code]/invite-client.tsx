@@ -36,8 +36,13 @@ export function InviteClient({ data }: Props) {
   const autoScrollTimers = useRef<number[]>([])
 
   function stopAutoScroll() {
-    autoScrollTimers.current.forEach((id) => window.clearTimeout(id))
-    autoScrollTimers.current = []
+    if (autoScrollTimers.current.length > 0) {
+      autoScrollTimers.current.forEach((id) => {
+        window.clearTimeout(id)
+        window.cancelAnimationFrame(id)
+      })
+      autoScrollTimers.current = []
+    }
   }
 
   useEffect(() => stopAutoScroll, [])
@@ -52,26 +57,36 @@ export function InviteClient({ data }: Props) {
   function startAutoScrollPresentation() {
     stopAutoScroll()
 
-    const sequence: {
-      ref: React.RefObject<HTMLElement | null>
-      pause: number
-    }[] = [
-        { ref: heroRef, pause: 3500 },
-        { ref: locationRef, pause: 3500 },
-        { ref: countdownRef, pause: 3500 },
-        { ref: rulesRef, pause: 3500 },
-        { ref: mapRef, pause: 3500 },
-        { ref: rsvpRef, pause: 0 },
-      ]
+    let lastTime = 0
+    let accumulatedScroll = 0
+    const scrollSpeedPixelsPerSecond = 40 // Pixels per second
 
-    const SCROLL_EASE = 1000
-    let elapsed = 1900
+    function autoScroll(timestamp: number) {
+      if (!lastTime) lastTime = timestamp
+      const deltaTime = timestamp - lastTime
+      lastTime = timestamp
 
-    sequence.forEach(({ ref, pause }) => {
-      const id = window.setTimeout(() => scrollTo(ref), elapsed)
-      autoScrollTimers.current.push(id)
-      elapsed += SCROLL_EASE + pause
-    })
+      // Calculate how much we should scroll
+      accumulatedScroll += (deltaTime / 1000) * scrollSpeedPixelsPerSecond
+
+      if (accumulatedScroll >= 1) {
+        const scrollPixels = Math.floor(accumulatedScroll)
+        accumulatedScroll -= scrollPixels
+        window.scrollBy(0, scrollPixels)
+      }
+
+      // Math.ceil deals with sub-pixel zooming discrepancies 
+      if (Math.ceil(window.innerHeight + window.scrollY) >= document.body.offsetHeight - 5) {
+        return
+      }
+
+      autoScrollTimers.current[0] = window.requestAnimationFrame(autoScroll)
+    }
+
+    // Delay start slightly
+    autoScrollTimers.current[0] = window.setTimeout(() => {
+      autoScrollTimers.current[0] = window.requestAnimationFrame(autoScroll)
+    }, 2000)
   }
 
   function handleOpen() {
@@ -143,16 +158,16 @@ export function InviteClient({ data }: Props) {
             <InvitationCard
               ref={locationRef}
               hostNames={event.host_names}
-              venueName={event.venue_name}
-              venueAddress={event.venue_address}
-              mapQuery={event.map_query}
+              venueName={VENUE.nameEnglish}
+              venueAddress={VENUE.address}
+              mapQuery={''}
             />
             <Countdown
               ref={countdownRef}
               targetDate={WEDDING_DATE.iso}
               hostNames={event.host_names}
-              venueName={event.venue_name || VENUE.nameEnglish}
-              venueAddress={event.venue_address || VENUE.address}
+              venueName={VENUE.nameEnglish}
+              venueAddress={VENUE.address}
             />
           </div>
 
@@ -165,9 +180,9 @@ export function InviteClient({ data }: Props) {
 
           <MapSection
             ref={mapRef}
-            venueName={event.venue_name || VENUE.nameEnglish}
-            venueAddress={event.venue_address || VENUE.address}
-            mapQuery={event.map_query}
+            venueName={VENUE.nameEnglish}
+            venueAddress={VENUE.address}
+            mapQuery={''}
             directionsUrl={VENUE.mapsUrl}
           />
 

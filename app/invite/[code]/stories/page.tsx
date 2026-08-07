@@ -8,43 +8,7 @@ import { Reveal } from '@/components/wedding/reveal'
 import { BookOpen, Sparkles, Heart } from 'lucide-react'
 import type { InviteResponse } from '@/lib/types'
 
-type StoryEvent = {
-  year: string
-  title: string
-  description: string
-  arabicTitle: string
-}
-
-const STORIES: StoryEvent[] = [
-  {
-    year: '2023',
-    title: 'The First Encounter',
-    arabicTitle: 'اللقاء الأول',
-    description:
-      'Under the beautiful skies of Riyadh, our paths crossed. A simple introduction sparkled an endless conversation filled with shared laughter, core values, and mutual dreams.',
-  },
-  {
-    year: '2024',
-    title: 'The Shared Dreams',
-    arabicTitle: 'رؤية مشتركة',
-    description:
-      'Over countless discussions and family gatherings, we realized we wanted to craft a life of commitment together. Our love flourished through support and deep friendship.',
-  },
-  {
-    year: '2025',
-    title: 'The Golden Engagement',
-    arabicTitle: 'الخطوبة المباركة',
-    description:
-      'With the blessings of our beloved families, we promised our hearts to another in an intimate ceremony, sealing our commitment and beginning the countdown to our big night.',
-  },
-  {
-    year: '2026',
-    title: 'The Marriage Covenant',
-    arabicTitle: 'الميثاق الغليظ',
-    description:
-      'Celebrating the start of forever, surrounded by the warmth of our relatives and friends, we embark on this sacred journey.',
-  },
-]
+import { LOVE_STORY } from '@/lib/wedding.config'
 
 export default function StoriesPage() {
   const params = useParams()
@@ -88,7 +52,7 @@ export default function StoriesPage() {
           </Reveal>
 
           <div className="relative mx-auto max-w-lg border-l border-gold/20 pl-6 space-y-10 py-4 font-sans">
-            {STORIES.map((story, index) => (
+            {LOVE_STORY.map((story, index) => (
               <Reveal key={story.title}>
                 <div className="relative">
                   <span className="absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-gold shadow-[0_0_10px_rgba(203,171,94,0.6)]">
@@ -97,13 +61,14 @@ export default function StoriesPage() {
 
                   <div className="group rounded-[1.5rem] border border-gold/15 bg-card/50 p-5 shadow-lg transition-all duration-300 hover:border-gold/30 hover:bg-card/75">
                     <div className="flex items-center justify-between gap-4">
-                      <span className="font-serif text-lg font-bold text-gold">{story.year}</span>
-                      <span className="font-arabic text-sm text-gold/60">{story.arabicTitle}</span>
+                      {/* Only render year if it exists on the type */}
+                      <span className="font-serif text-lg font-bold text-gold">{(story as any).year || ''}</span>
+                      <span className="font-arabic text-sm text-gold/60">{story.titleAr || (story as any).arabicTitle}</span>
                     </div>
 
                     <h3 className="mt-2 font-serif text-base text-foreground font-semibold flex items-center gap-1.5">
                       {story.title}
-                      {index === STORIES.length - 1 && (
+                      {index === LOVE_STORY.length - 1 && (
                         <Sparkles className="h-4 w-4 text-gold animate-bounce" />
                       )}
                     </h3>
