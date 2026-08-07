@@ -56,7 +56,7 @@ export const IMAGES = {
 
 // ─── Audio ────────────────────────────────────────────────────────────────
 export const AUDIO = {
-    src: '/audio/wedding.mp3',
+    src: '/audio/Abdulmajed_Abdullah_-_Enti_Wbas6k.mp3',
 } as const
 
 // ─── Contact Coordinators ─────────────────────────────────────────────────

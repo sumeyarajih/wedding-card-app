@@ -1,6 +1,7 @@
 'use client'
 
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { AUDIO } from '@/lib/wedding.config'
 
 type MusicContextType = {
     playing: boolean
@@ -42,7 +43,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     return (
         <MusicContext.Provider value={{ playing, playMusic, pauseMusic, toggleMusic }}>
             {children}
-            <audio ref={audioRef} loop preload="auto" src="/audio/wedding.mp3" />
+            <audio ref={audioRef} loop preload="auto" src={AUDIO.src} />
         </MusicContext.Provider>
     )
 }
