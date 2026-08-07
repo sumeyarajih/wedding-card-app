@@ -4,7 +4,7 @@ import { CalendarHeart } from 'lucide-react'
 import { forwardRef, useEffect, useState } from 'react'
 import { Reveal } from './reveal'
 import { CalendarCard } from './calendar-card'
-import { COUPLE, VENUE } from '@/lib/wedding.config'
+import { COUPLE, VENUE, WEDDING_DATE } from '@/lib/wedding.config'
 
 interface CountdownProps {
   targetDate?: string
@@ -13,7 +13,7 @@ interface CountdownProps {
   venueAddress?: string
 }
 
-const DEFAULT_TARGET = '2026-12-30T16:49:00+03:00'
+const DEFAULT_TARGET = WEDDING_DATE.iso
 const DEFAULT_HOST = 'Mohammed Ali & Sebat Mohammed'
 const DEFAULT_VENUE = 'The Ritz-Carlton, Riyadh'
 const DEFAULT_ADDRESS = 'Al Hada District, Riyadh, Saudi Arabia'

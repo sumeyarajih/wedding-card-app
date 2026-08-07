@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import { WEDDING_DATE } from '@/lib/wedding.config'
 
 export function CalendarCard() {
     return (
@@ -25,11 +26,11 @@ export function CalendarCard() {
                         }}
                     >
                         <div className="flex items-center justify-between">
-                            <span className="font-sans text-[0.55rem] tracking-[0.2em] text-background/80 uppercase">أغسطس</span>
-                            <span className="font-sans text-[0.55rem] tracking-[0.2em] text-background/80 uppercase">٢٠٢٦</span>
+                            <span className="font-sans text-[0.55rem] tracking-[0.2em] text-background/80 uppercase">{WEDDING_DATE.monthNameAr}</span>
+                            <span className="font-sans text-[0.55rem] tracking-[0.2em] text-background/80 uppercase">{WEDDING_DATE.yearAr}</span>
                         </div>
                         <div className="mt-0.5 font-sans text-[0.5rem] tracking-widest text-background/60 uppercase">
-                            August 2026
+                            {WEDDING_DATE.longEnglish.split(', ')[1]?.split(' ')[0] || 'Month'} {WEDDING_DATE.yearEnglish}
                         </div>
                     </div>
 
@@ -45,7 +46,7 @@ export function CalendarCard() {
                                 color: 'transparent',
                             }}
                         >
-                            8
+                            {WEDDING_DATE.dayNumber}
                         </div>
 
                         {/* Divider */}
@@ -57,10 +58,10 @@ export function CalendarCard() {
                             dir="rtl"
                             style={{ color: 'var(--foreground)' }}
                         >
-                            السبت
+                            {WEDDING_DATE.dayNameAr}
                         </p>
                         <p className="mt-1 font-sans text-[0.6rem] tracking-[0.2em] uppercase text-muted-foreground">
-                            Saturday
+                            {WEDDING_DATE.longEnglish.split(', ')[0] || 'Day'}
                         </p>
 
                         {/* Time */}
@@ -69,7 +70,7 @@ export function CalendarCard() {
                                 className="font-sans text-[0.65rem] font-semibold"
                                 style={{ color: 'var(--foreground)' }}
                             >
-                                PM 4:49
+                                {WEDDING_DATE.timeEnglish.replace('at ', '')}
                             </span>
                         </div>
                     </div>

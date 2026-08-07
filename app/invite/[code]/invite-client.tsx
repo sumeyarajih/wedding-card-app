@@ -128,7 +128,7 @@ export function InviteClient({ data }: Props) {
       <main className="relative mx-auto min-h-screen max-w-md overflow-hidden bg-background shadow-[0_0_80px_rgba(0,0,0,0.6)] lg:max-w-6xl">
         <GoldParticles count={16} />
 
-        <div className="relative pb-28 pt-4 md:pt-8">
+        <div className="relative pb-28 pt-4 md:pt-24 lg:pt-32">
           <div ref={heroRef}>
             <Hero
               hostNames={event.host_names}

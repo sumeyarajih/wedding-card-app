@@ -68,7 +68,7 @@ export default function GalleryPage() {
         <div className="absolute inset-0 bg-background/70" />
       </div>
 
-      <main className="relative mx-auto min-h-screen max-w-md overflow-hidden bg-background shadow-[0_0_80px_rgba(0,0,0,0.6)] pb-28 pt-16 md:pt-24 lg:max-w-6xl">
+      <main className="relative mx-auto min-h-screen max-w-md overflow-hidden bg-background shadow-[0_0_80px_rgba(0,0,0,0.6)] pb-28 pt-16 md:pt-28 lg:pt-32 lg:max-w-6xl">
         <GoldParticles count={16} />
 
         <div className="px-6 py-8">

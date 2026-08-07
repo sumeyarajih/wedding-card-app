@@ -37,13 +37,13 @@ export function Hero({
           taps "Open"; the curtains simply slide away to reveal it already in
           motion. Only rendered when this event actually has a video. */}
       {videoUrl && (
-        <div className="relative mb-8 w-full max-w-md overflow-hidden rounded-b-[2.5rem] shadow-2xl lg:max-w-xl lg:rounded-[2.5rem]">
+        <div className="relative mb-8 w-full max-w-md overflow-hidden rounded-b-[2.5rem] shadow-2xl lg:rounded-[2.5rem]">
           <video
             ref={videoRef}
             autoPlay
             muted
             playsInline
-            className="aspect-[9/16] w-full object-cover lg:aspect-video"
+            className="aspect-[9/16] w-full object-cover"
             src={videoUrl}
             onEnded={onVideoEnded}
           />

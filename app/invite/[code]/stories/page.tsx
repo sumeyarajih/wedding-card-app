@@ -55,7 +55,7 @@ export default function StoriesPage() {
     fetch(`/api/invite/${code}`)
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => data && setInvite(data))
-      .catch(() => {})
+      .catch(() => { })
   }, [code])
 
   return (
@@ -70,7 +70,7 @@ export default function StoriesPage() {
         <div className="absolute inset-0 bg-background/70" />
       </div>
 
-      <main className="relative mx-auto min-h-screen max-w-md overflow-hidden bg-background shadow-[0_0_80px_rgba(0,0,0,0.6)] pb-28 pt-16 md:pt-24 lg:max-w-6xl">
+      <main className="relative mx-auto min-h-screen max-w-md overflow-hidden bg-background shadow-[0_0_80px_rgba(0,0,0,0.6)] pb-28 pt-16 md:pt-28 lg:pt-32 lg:max-w-6xl">
         <div className="px-6 py-8">
           <Reveal>
             <div className="mb-12 text-center">
